@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🎨 Boya Üretim Takip</title>
+<style>
+:root {
+  --bg:#0f172a;--bg2:#1e293b;--bg3:#0a1120;--border:#334155;
+  --blue:#60a5fa;--green:#22c55e;--red:#ef4444;--yellow:#eab308;
+  --purple:#a78bfa;--orange:#fb923c;--text:#e2e8f0;--muted:#64748b;--sub:#94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px;}
+header{background:linear-gradient(135deg,#1e3a5f,#0f4c81);padding:13px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.5);}
+header h1{font-size:1.05rem;font-weight:700;color:#fff;}
+.date-badge{font-size:0.72rem;color:#93c5fd;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:20px;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#1e293b;border-top:1px solid #334155;display:flex;z-index:200;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:9px 4px 7px;cursor:pointer;color:var(--sub);font-size:0.6rem;gap:2px;transition:color .2s;border:none;background:none;}
+.bnav-item .icon{font-size:1.25rem;}
+.bnav-item.active{color:var(--blue);}
+.bnav-item:active{opacity:.7;}
+.page{display:none;padding:14px;}
+.page.active{display:block;}
+.card{background:var(--bg2);border-radius:14px;padding:15px;border:1px solid var(--border);margin-bottom:14px;}
+.card-title{font-size:0.88rem;color:var(--blue);font-weight:600;margin-bottom:13px;display:flex;align-items:center;gap:6px;}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.kpi-grid.g3{grid-template-columns:repeat(3,1fr);}
+.kpi-grid.g4{grid-template-columns:repeat(4,1fr);}
+.kpi{background:var(--bg3);border-radius:11px;padding:13px 8px;border:1px solid var(--border);text-align:center;}
+.kpi .val{font-size:1.45rem;font-weight:700;line-height:1.2;}
+.kpi .lbl{font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;}
+.kpi .sub{font-size:0.7rem;color:var(--sub);margin-top:2px;}
+.progress-row{margin-bottom:11px;}
+.progress-label{display:flex;justify-content:space-between;font-size:0.76rem;color:var(--sub);margin-bottom:4px;}
+.progress-bar{background:#060d1a;border-radius:6px;height:10px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:6px;transition:width .6s ease;}
+label{display:block;font-size:0.78rem;color:var(--sub);margin-bottom:4px;margin-top:11px;}
+label.first{margin-top:0;}
+input,select,textarea{width:100%;padding:11px 12px;background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;color:var(--text);font-size:0.92rem;outline:none;transition:border .2s;-webkit-appearance:none;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);}
+textarea{resize:vertical;min-height:68px;}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+button{width:100%;padding:13px;border-radius:10px;border:none;cursor:pointer;font-size:0.93rem;font-weight:700;transition:all .2s;margin-top:13px;letter-spacing:.02em;}
+.btn-primary{background:#2563eb;color:#fff;}
+.btn-success{background:#16a34a;color:#fff;}
+.btn-warning{background:#d97706;color:#fff;}
+.btn-danger{background:#dc2626;color:#fff;}
+button:active{transform:scale(.97);opacity:.88;}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;font-size:0.76rem;min-width:480px;}
+th{background:var(--bg3);color:var(--blue);padding:9px 8px;text-align:left;font-weight:600;border-bottom:2px solid var(--border);white-space:nowrap;}
+td{padding:7px 8px;border-bottom:1px solid #131f32;color:#cbd5e1;}
+tr:hover td{background:#1a2740;}
+.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:0.67rem;font-weight:700;}
+.bg{background:#14532d;color:#4ade80;}
+.br{background:#450a0a;color:#f87171;}
+.by{background:#422006;color:#fbbf24;}
+.bb{background:#1e3a5f;color:#93c5fd;}
+.info-box{background:#172033;border-left:4px solid var(--blue);padding:10px 12px;border-radius:6px;font-size:0.78rem;color:#93c5fd;margin-bottom:13px;line-height:1.5;}
+.warn-box{background:#1c1207;border-left:4px solid var(--yellow);padding:10px 12px;border-radius:6px;font-size:0.78rem;color:#fbbf24;margin-bottom:13px;line-height:1.5;}
+.ok-box{background:#052e16;border-left:4px solid var(--green);padding:10px 12px;border-radius:6px;font-size:0.78rem;color:#4ade80;margin-bottom:13px;line-height:1.5;}
+.sec{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:16px 0 9px;font-weight:600;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.c-green{color:var(--green);}.c-red{color:var(--red);}.c-yellow{color:var(--yellow);}
+.c-blue{color:var(--blue);}.c-purple{color:var(--purple);}.c-orange{color:var(--orange);}
+.del-btn{background:none;border:none;color:var(--red);cursor:pointer;font-size:1rem;padding:3px;margin:0;width:auto;display:inline;}
+.del-btn:active{opacity:.6;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.open{display:flex;}
+.modal{background:#1e293b;border-radius:14px;border:1px solid #334155;padding:18px;width:100%;max-width:430px;max-height:88vh;overflow-y:auto;}
+.modal-title{font-size:0.95rem;font-weight:700;color:var(--blue);margin-bottom:13px;}
+.modal-close{float:right;background:none;border:none;color:var(--sub);font-size:1.4rem;cursor:pointer;margin:0;padding:0;width:auto;line-height:1;margin-top:-4px;}
+.note-cell{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;color:var(--sub);}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎨 Boya Üretim Takip</h1>
+  <span class="date-badge" id="headerDate"></span>
+</header>
+
+<nav class="bottom-nav">
+  <button class="bnav-item active" onclick="showPage('anasayfa')"><span class="icon">🏠</span>Ana Sayfa</button>
+  <button class="bnav-item" onclick="showPage('gunluk')"><span class="icon">📋</span>Gün Girişi</button>
+  <button class="bnav-item" onclick="showPage('haftalik')"><span class="icon">📅</span>Haftalık</button>
+  <button class="bnav-item" onclick="showPage('aylik')"><span class="icon">📊</span>Aylık</button>
+  <button class="bnav-item" onclick="showPage('ayarlar')"><span class="icon">⚙️</span>Ayarlar</button>
+</nav>
+
+<!-- ===================== ANASAYFA ===================== -->
+<div id="page-anasayfa" class="page active">
+  <div id="uyari-box"></div>
+
+  <p class="sec">📈 Bugünün Özeti</p>
+  <div class="kpi-grid g4">
+    <div class="kpi"><div class="val c-blue" id="kpi-gunHedef">—</div><div class="lbl">Günlük Hedef</div><div class="sub">Ton</div></div>
+    <div class="kpi"><div class="val c-green" id="kpi-gunUretim">—</div><div class="lbl">Üretim</div><div class="sub">Ton</div></div>
+    <div class="kpi"><div class="val c-yellow" id="kpi-gunVerim">—</div><div class="lbl">kg/Adam·Saat</div><div class="sub">Verimlilik</div></div>
+    <div class="kpi"><div class="val c-orange" id="kpi-devamsizlik">—</div><div class="lbl">Devamsızlık</div><div class="sub">Kişi</div></div>
+  </div>
+
+  <p class="sec">📅 Bu Hafta</p>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="val c-blue" id="kpi-hftHedef">—</div><div class="lbl">Haftalık Hedef</div><div class="sub">Ton</div></div>
+    <div class="kpi"><div class="val c-green" id="kpi-hftUretim">—</div><div class="lbl">Gerçekleşen</div><div class="sub">Ton</div></div>
+    <div class="kpi"><div class="val c-purple" id="kpi-hftVerim">—</div><div class="lbl">Ort. Verimlilik</div><div class="sub">kg/Adam·Saat</div></div>
+    <div class="kpi"><div class="val" id="kpi-hftFark" style="font-size:1.2rem">—</div><div class="lbl">Fark</div><div class="sub">Ton</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📆 Aylık Gerçekleşme</div>
+    <div class="progress-row">
+      <div class="progress-label"><span id="prog-ay-lbl">Bu Ay</span><span id="prog-ay-pct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-ay-fill" style="width:0%;background:var(--blue)"></div></div>
+    </div>
+    <div class="kpi-grid g3" style="margin-bottom:0">
+      <div class="kpi"><div class="val c-blue" id="kpi-ayHedef">—</div><div class="lbl">Aylık Hedef</div><div class="sub">Ton</div></div>
+      <div class="kpi"><div class="val c-green" id="kpi-ayUretim">—</div><div class="lbl">Gerçekleşen</div><div class="sub">Ton</div></div>
+      <div class="kpi"><div class="val c-yellow" id="kpi-ayKalan">—</div><div class="lbl">Kalan</div><div class="sub">Ton</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🏆 Yıllık Gerçekleşme</div>
+    <div class="progress-row">
+      <div class="progress-label"><span id="prog-yil-lbl">Bu Yıl</span><span id="prog-yil-pct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-yil-fill" style="width:0%;background:var(--purple)"></div></div>
+    </div>
+    <div class="kpi-grid g3" style="margin-bottom:0">
+      <div class="kpi"><div class="val c-purple" id="kpi-yilHedef">—</div><div class="lbl">Yıllık Hedef</div><div class="sub">Ton</div></div>
+      <div class="kpi"><div class="val c-green" id="kpi-yilUretim">—</div><div class="lbl">Gerçekleşen</div><div class="sub">Ton</div></div>
+      <div class="kpi"><div class="val c-yellow" id="kpi-yilKalan">—</div><div class="lbl">Kalan</div><div class="sub">Ton</div></div>
+    </div>
+  </div>
+
+  <p class="sec">📋 Son 5 Gün</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tarih</th><th>Üretim(T)</th><th>Hedef(T)</th><th>Verim</th><th>Personel</th><th>Durum</th></tr></thead>
+      <tbody id="son5-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== GÜNLÜK GİRİŞ ===================== -->
+<div id="page-gunluk" class="page">
+  <div class="info-box">📌 Her gün dolum yapılan miktarı, çalışan personeli ve varsa devamsızlık nedenlerini girin.</div>
+
+  <div class="card">
+    <div class="card-title">📋 Günlük Veri Girişi</div>
+    <label class="first">Tarih</label>
+    <input type="date" id="gun-tarih">
+
+    <div class="fg2">
+      <div>
+        <label>Planlanan Tonaj (T)</label>
+        <input type="number" id="gun-plan" placeholder="0.000" step="0.001">
+      </div>
+      <div>
+        <label>Önceki Haftadan Sarkan (T)</label>
+        <input type="number" id="gun-sarkan" placeholder="0.000" step="0.001">
+      </div>
+    </div>
+
+    <div class="fg2">
+      <div>
+        <label>Gün İçi İlave Plan (T)</label>
+        <input type="number" id="gun-ilave" placeholder="0.000" step="0.001">
+      </div>
+      <div>
+        <label>Gerçekleşen Dolum (T)</label>
+        <input type="number" id="gun-uretim" placeholder="0.000" step="0.001">
+      </div>
+    </div>
+
+    <p class="sec" style="margin-top:14px;">👥 Personel Bilgisi</p>
+    <div class="fg3">
+      <div>
+        <label>Toplam Planlanan</label>
+        <input type="number" id="gun-personelPlan" placeholder="0">
+      </div>
+      <div>
+        <label>Fiilen Çalışan</label>
+        <input type="number" id="gun-personelGercek" placeholder="0">
+      </div>
+      <div>
+        <label>Mesai Saati</label>
+        <input type="number" id="gun-mesai" placeholder="8" step="0.5">
+      </div>
+    </div>
+
+    <p class="sec" style="margin-top:14px;">🚫 Devamsızlık</p>
+    <div class="fg3">
+      <div>
+        <label>İstirahat</label>
+        <input type="number" id="dev-istirahat" placeholder="0">
+      </div>
+      <div>
+        <label>Mazeret</label>
+        <input type="number" id="dev-mazeret" placeholder="0">
+      </div>
+      <div>
+        <label>İzinsiz</label>
+        <input type="number" id="dev-izinsiz" placeholder="0">
+      </div>
+    </div>
+
+    <label>Aksama / Açıklama Notu</label>
+    <textarea id="gun-not" placeholder="Düşük tonaj, makine arızası, hammadde eksikliği vb. açıklama..."></textarea>
+
+    <button class="btn-success" onclick="gunKaydet()">✅ Günlük Veriyi Kaydet</button>
+    <div id="gun-msg" style="margin-top:10px;font-size:0.82rem;"></div>
+  </div>
+
+  <p class="sec">📊 Bugün İçin Hesaplanan Değerler</p>
+  <div class="kpi-grid g3">
+    <div class="kpi"><div class="val c-blue" id="calc-gunHedef">—</div><div class="lbl">Günlük Hedef</div><div class="sub">Ton</div></div>
+    <div class="kpi"><div class="val c-green" id="calc-gercek">—</div><div class="lbl">Gerçekleşen</div><div class="sub">Ton</div></div>
+    <div class="kpi"><div class="val c-yellow" id="calc-verim">—</div><div class="lbl">kg/Adam·Saat</div><div class="sub">Verimlilik</div></div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="val c-orange" id="calc-devamsizlik">—</div><div class="lbl">Toplam Devamsız</div><div class="sub">Kişi</div></div>
+    <div class="kpi"><div class="val" id="calc-fark">—</div><div class="lbl">Plana Göre Fark</div><div class="sub">Ton</div></div>
+  </div>
+</div>
+
+<!-- ===================== HAFTALIK ===================== -->
+<div id="page-haftalik" class="page">
+  <div class="card">
+    <div class="card-title">📅 Haftalık Özet</div>
+    <div class="fg2">
+      <div>
+        <label class="first">Hafta Seç (Başlangıç Tarihi)</label>
+        <input type="date" id="hft-baslangic">
+      </div>
+      <div style="display:flex;align-items:flex-end;">
+        <button class="btn-primary" style="margin-top:0;" onclick="haftaGoster()">🔍 Göster</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="sec">�� Haftalık KPI</p>
+  <div class="kpi-grid g3">
+    <div class="kpi"><div class="val c-blue" id="hft-kpi-hedef">—</div><div class="lbl">Hedef</div><div class="sub">Ton</div></div>
+    <div class="kpi"><div class="val c-green" id="hft-kpi-gercek">—</div><div class="lbl">Gerçekleşen</div><div class="sub">Ton</div></div>
+    <div class="kpi"><div class="val c-yellow" id="hft-kpi-verim">—</div><div class="lbl">Ort. Verim</div><div class="sub">kg/Adam·Saat</div></div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="val" id="hft-kpi-fark">—</div><div class="lbl">Fark</div><div class="sub">Ton</div></div>
+    <div class="kpi"><div class="val c-orange" id="hft-kpi-devamsizlik">—</div><div class="lbl">Toplam Devamsız</div><div class="sub">Kişi-Gün</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 Hafta Detayı</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tarih</th><th>Üretim(T)</th><th>Hedef(T)</th><th>Verim</th><th>Pers.</th><th>Dev.</th><th>Durum</th></tr></thead>
+        <tbody id="hft-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== AYLIK ===================== -->
+<div id="page-aylik" class="page">
+  <div class="card">
+    <div class="card-title">📆 Ay Seçimi</div>
+    <div class="fg2">
+      <div>
+        <label class="first">Yıl</label>
+        <select id="ay-yil"></select>
+      </div>
+      <div>
+        <label class="first">Ay</label>
+        <select id="ay-ay">
+          <option value="0">Ocak</option><option value="1">Şubat</option><option value="2">Mart</option>
+          <option value="3">Nisan</option><option value="4">Mayıs</option><option value="5">Haziran</option>
+          <option value="6">Temmuz</option><option value="7">Ağustos</option><option value="8">Eylül</option>
+          <option value="9">Ekim</option><option value="10">Kasım</option><option value="11">Aralık</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="aylikGoster()">🔍 Aylık Raporu Göster</button>
+  </div>
+
+  <p class="sec">📊 Aylık KPI</p>
+  <div class="kpi-grid g3">
+    <div class="kpi"><div class="val c-blue" id="ay-kpi-hedef">—</div><div class="lbl">Aylık Hedef</div><div class="sub">Ton</div></div>
+    <div class="kpi"><div class="val c-green" id="ay-kpi-gercek">—</div><div class="lbl">Gerçekleşen</div><div class="sub">Ton</div></div>
+    <div class="kpi"><div class="val c-yellow" id="ay-kpi-verim">—</div><div class="lbl">Ort. Verim</div><div class="sub">kg/Adam·Saat</div></div>
+  </div>
+  <div class="kpi-grid g3">
+    <div class="kpi"><div class="val" id="ay-kpi-fark">—</div><div class="lbl">Fark</div><div class="sub">Ton</div></div>
+    <div class="kpi"><div class="val c-orange" id="ay-kpi-devamsizlik">—</div><div class="lbl">Toplam Devamsız</div><div class="sub">Kişi-Gün</div></div>
+    <div class="kpi"><div class="val c-purple" id="ay-kpi-calismaSaati">—</div><div class="lbl">Çalışma Saati</div><div class="sub">Toplam Saat</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 Aylık Gün Detayı</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tarih</th><th>Üretim(T)</th><th>Hedef(T)</th><th>Verim</th><th>Pers.</th><th>Dev.</th><th>Not</th><th></th></tr></thead>
+        <tbody id="ay-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== AYARLAR ===================== -->
+<div id="page-ayarlar" class="page">
+  <div class="card">
+    <div class="card-title">🎯 Yıllık & Aylık Hedefler (Ton)</div>
+    <div class="info-box">Yıllık hedef ve her aya özel hedefleri girin. Boş bırakılan aylara yıllık/12 uygulanır.</div>
+
+    <label class="first">Yıl</label>
+    <select id="ayar-yil"></select>
+
+    <label>Yıllık Hedef (Ton)</label>
+    <input type="number" id="ayar-yilHedef" placeholder="örn: 12000" step="0.001">
+
+    <p class="sec">Aylık Hedefler (Ton)</p>
+    <div class="fg2">
+      <div><label>Ocak</label><input type="number" id="h-0" placeholder="oto" step="0.001"></div>
+      <div><label>Şubat</label><input type="number" id="h-1" placeholder="oto" step="0.001"></div>
+      <div><label>Mart</label><input type="number" id="h-2" placeholder="oto" step="0.001"></div>
+      <div><label>Nisan</label><input type="number" id="h-3" placeholder="oto" step="0.001"></div>
+      <div><label>Mayıs</label><input type="number" id="h-4" placeholder="oto" step="0.001"></div>
+      <div><label>Haziran</label><input type="number" id="h-5" placeholder="oto" step="0.001"></div>
+      <div><label>Temmuz</label><input type="number" id="h-6" placeholder="oto" step="0.001"></div>
+      <div><label>Ağustos</label><input type="number" id="h-7" placeholder="oto" step="0.001"></div>
+      <div><label>Eylül</label><input type="number" id="h-8" placeholder="oto" step="0.001"></div>
+      <div><label>Ekim</label><input type="number" id="h-9" placeholder="oto" step="0.001"></div>
+      <div><label>Kasım</label><input type="number" id="h-10" placeholder="oto" step="0.001"></div>
+      <div><label>Aralık</label><input type="number" id="h-11" placeholder="oto" step="0.001"></div>
+    </div>
+    <button class="btn-success" onclick="hedefleriKaydet()">💾 Hedefleri Kaydet</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📅 Aylık Çalışma Gün Sayıları</div>
+    <div class="info-box">Her ay için planlanan çalışma günü sayısını girin.</div>
+    <select id="ayar-gunYil" onchange="gunSayisiYukle()"></select>
+    <div class="fg2" id="gun-sayisi-grid">
+      <div><label>Ocak</label><input type="number" id="g-0" placeholder="22"></div>
+      <div><label>Şubat</label><input type="number" id="g-1" placeholder="20"></div>
+      <div><label>Mart</label><input type="number" id="g-2" placeholder="23"></div>
+      <div><label>Nisan</label><input type="number" id="g-3" placeholder="22"></div>
+      <div><label>Mayıs</label><input type="number" id="g-4" placeholder="22"></div>
+      <div><label>Haziran</label><input type="number" id="g-5" placeholder="22"></div>
+      <div><label>Temmuz</label><input type="number" id="g-6" placeholder="23"></div>
+      <div><label>Ağustos</label><input type="number" id="g-7" placeholder="22"></div>
+      <div><label>Eylül</label><input type="number" id="g-8" placeholder="22"></div>
+      <div><label>Ekim</label><input type="number" id="g-9" placeholder="23"></div>
+      <div><label>Kasım</label><input type="number" id="g-10" placeholder="21"></div>
+      <div><label>Aralık</label><input type="number" id="g-11" placeholder="21"></div>
+    </div>
+    <button class="btn-primary" onclick="gunSayisiKaydet()">💾 Gün Sayılarını Kaydet</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚠️ Veri Yönetimi</div>
+    <button class="btn-warning" onclick="veriIndir()">📥 Tüm Veriyi İndir (JSON)</button>
+    <label style="margin-top:12px;">Veri Yükle (JSON dosyası)</label>
+    <input type="file" id="veri-yukle-input" accept=".json" onchange="veriYukle(event)">
+    <button class="btn-danger" style="margin-top:10px;" onclick="veriSifirla()">🗑️ Tüm Veriyi Sıfırla</button>
+  </div>
+</div>
+
+<!-- NOT MODAL -->
+<div class="modal-overlay" id="not-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="modalKapat()">×</button>
+    <div class="modal-title">📝 Kayıt Detayı</div>
+    <div id="modal-icerik"></div>
+  </div>
+</div>
+<script>
+// ==================== VERİ KATMANI ====================
+const DB = {
+  save(key,val){ try{localStorage.setItem('boya_'+key,JSON.stringify(val));}catch(e){} },
+  load(key,def){ try{const d=localStorage.getItem('boya_'+key);return d?JSON.parse(d):def;}catch(e){return def;} }
+};
+
+// ==================== YARDIMCI FONKSİYONLAR ====================
+function pad(n){return String(n).padStart(2,'0');}
+function dateStr(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
+function todayStr(){return dateStr(new Date());}
+function fmt(n,d=3){if(n===null||n===undefined||isNaN(n))return '—';return Number(n).toFixed(d);}
+function fmtT(n){return fmt(n,3)+' T';}
+function fmtV(n){return fmt(n,2)+' kg/A·S';}
+
+const AYLAR=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+
+function gunlukHedefHesapla(yil,ay,gunSayisi){
+  const hedefler=DB.load('hedefler',{});
+  const gunSayilari=DB.load('gunSayilari',{});
+  const key=`${yil}`;
+  const ayKey=`${yil}-${ay}`;
+  let ayHedef=null;
+  if(hedefler[key]){
+    const hk=hedefler[key];
+    if(hk.aylar&&hk.aylar[ay]!=null&&hk.aylar[ay]!=''){
+      ayHedef=parseFloat(hk.aylar[ay]);
+    } else if(hk.yillik){
+      ayHedef=parseFloat(hk.yillik)/12;
+    }
+  }
+  if(ayHedef===null)return null;
+  let gSay=gunSayisi;
+  if(!gSay){
+    const gs=DB.load('gunSayilari',{});
+    if(gs[key]&&gs[key][ay]!=null)gSay=parseInt(gs[key][ay]);
+    else gSay=22;
+  }
+  return gSay>0?(ayHedef/gSay):null;
+}
+
+function aylikHedefAl(yil,ay){
+  const hedefler=DB.load('hedefler',{});
+  const key=`${yil}`;
+  if(hedefler[key]){
+    const hk=hedefler[key];
+    if(hk.aylar&&hk.aylar[ay]!=null&&hk.aylar[ay]!==''){
+      return parseFloat(hk.aylar[ay]);
+    } else if(hk.yillik){
+      return parseFloat(hk.yillik)/12;
+    }
+  }
+  return null;
+}
+
+function yillikHedefAl(yil){
+  const hedefler=DB.load('hedefler',{});
+  if(hedefler[`${yil}`]&&hedefler[`${yil}`].yillik)return parseFloat(hedefler[`${yil}`].yillik);
+  return null;
+}
+
+function ayGunSayisi(yil,ay){
+  const gs=DB.load('gunSayilari',{});
+  if(gs[`${yil}`]&&gs[`${yil}`][ay]!=null&&gs[`${yil}`][ay]!=='')return parseInt(gs[`${yil}`][ay]);
+  return 22;
+}
+
+function verimHesapla(uretimTon,personel,mesaiSaat){
+  if(!personel||personel<=0||!mesaiSaat||mesaiSaat<=0)return null;
+  return (uretimTon*1000)/(personel*mesaiSaat);
+}
+
+function durum(gercek,hedef){
+  if(hedef===null||hedef===0)return '<span class="badge bb">—</span>';
+  const oran=gercek/hedef;
+  if(oran>=0.97)return '<span class="badge bg">✅ İYİ</span>';
+  if(oran>=0.85)return '<span class="badge by">⚠️ ORTA</span>';
+  return '<span class="badge br">❌ DÜŞÜK</span>';
+}
+
+// ==================== SAYFA NAVİGASYONU ====================
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const idx={'anasayfa':0,'gunluk':1,'haftalik':2,'aylik':3,'ayarlar':4};
+  document.querySelectorAll('.bnav-item')[idx[id]].classList.add('active');
+  if(id==='anasayfa')anasayfaGuncelle();
+  if(id==='gunluk')gunlukFormInit();
+  if(id==='haftalik')haftaInit();
+  if(id==='aylik')aylikInit();
+  if(id==='ayarlar')ayarlarYukle();
+}
+
+// ==================== GÜNLÜK KAYIT ====================
+function gunlukFormInit(){
+  const t=document.getElementById('gun-tarih');
+  if(!t.value)t.value=todayStr();
+}
+
+function gunKaydet(){
+  const tarih=document.getElementById('gun-tarih').value;
+  if(!tarih){alert('Tarih seçiniz!');return;}
+  const plan=parseFloat(document.getElementById('gun-plan').value)||0;
+  const sarkan=parseFloat(document.getElementById('gun-sarkan').value)||0;
+  const ilave=parseFloat(document.getElementById('gun-ilave').value)||0;
+  const uretim=parseFloat(document.getElementById('gun-uretim').value)||0;
+  const personelPlan=parseInt(document.getElementById('gun-personelPlan').value)||0;
+  const personelGercek=parseInt(document.getElementById('gun-personelGercek').value)||0;
+  const mesai=parseFloat(document.getElementById('gun-mesai').value)||8;
+  const istirahat=parseInt(document.getElementById('dev-istirahat').value)||0;
+  const mazeret=parseInt(document.getElementById('dev-mazeret').value)||0;
+  const izinsiz=parseInt(document.getElementById('dev-izinsiz').value)||0;
+  const not=document.getElementById('gun-not').value.trim();
+
+  const d=new Date(tarih);
+  const yil=d.getFullYear();const ay=d.getMonth();
+  const gunHdf=gunlukHedefHesapla(yil,ay);
+  const verim=verimHesapla(uretim,personelGercek,mesai);
+  const toplamDevamsiz=istirahat+mazeret+izinsiz;
+
+  const kayit={tarih,plan,sarkan,ilave,uretim,personelPlan,personelGercek,mesai,
+    istirahat,mazeret,izinsiz,not,gunHedef:gunHdf,verim,toplamDevamsiz,
+    ts:Date.now()};
+
+  const gunler=DB.load('gunler',{});
+  gunler[tarih]=kayit;
+  DB.save('gunler',gunler);
+
+  const msg=document.getElementById('gun-msg');
+  msg.innerHTML=`<div class="ok-box">✅ ${tarih} tarihi kaydedildi. Üretim: <strong>${fmt(uretim,3)} T</strong> | Verim: <strong>${fmt(verim,2)} kg/A·S</strong></div>`;
+
+  hesaplaGosterim(kayit);
+  setTimeout(()=>anasayfaGuncelle(),100);
+}
+
+function hesaplaGosterim(k){
+  document.getElementById('calc-gunHedef').textContent=k.gunHedef!==null?fmt(k.gunHedef,3)+'T':'—';
+  document.getElementById('calc-gercek').textContent=fmt(k.uretim,3)+' T';
+  document.getElementById('calc-verim').textContent=fmt(k.verim,2)+' kg/A·S';
+  document.getElementById('calc-devamsizlik').textContent=k.toplamDevamsiz+' kişi';
+  const fark=k.gunHedef!==null?(k.uretim-k.gunHedef):null;
+  const el=document.getElementById('calc-fark');
+  if(fark!==null){
+    el.textContent=(fark>=0?'+':'')+fmt(fark,3)+' T';
+    el.className='val '+(fark>=0?'c-green':'c-red');
+  } else el.textContent='—';
+}
+
+// ==================== ANASAYFA ====================
+function anasayfaGuncelle(){
+  const today=todayStr();
+  const gunler=DB.load('gunler',{});
+  const d=new Date();
+  const yil=d.getFullYear();const ay=d.getMonth();
+
+  // Bugün
+  const bg=gunler[today];
+  if(bg){
+    const el=document.getElementById('kpi-gunHedef');
+    el.textContent=bg.gunHedef!==null?fmt(bg.gunHedef,3)+' T':'—';
+    document.getElementById('kpi-gunUretim').textContent=fmt(bg.uretim,3)+' T';
+    const vEl=document.getElementById('kpi-gunVerim');
+    vEl.textContent=fmt(bg.verim,2);
+    vEl.className='val '+(bg.verim&&bg.verim>=0?'c-yellow':'c-red');
+    document.getElementById('kpi-devamsizlik').textContent=bg.toplamDevamsiz||0;
+  }
+
+  // Bu ay
+  const ayEntries=Object.values(gunler).filter(g=>{
+    const gd=new Date(g.tarih);return gd.getFullYear()===yil&&gd.getMonth()===ay;
+  });
+  const ayUretim=ayEntries.reduce((s,g)=>s+g.uretim,0);
+  const ayHedef=aylikHedefAl(yil,ay);
+  const ayKalan=ayHedef!==null?(ayHedef-ayUretim):null;
+  document.getElementById('kpi-ayHedef').textContent=ayHedef!==null?fmt(ayHedef,3)+' T':'—';
+  document.getElementById('kpi-ayUretim').textContent=fmt(ayUretim,3)+' T';
+  document.getElementById('kpi-ayKalan').textContent=ayKalan!==null?fmt(ayKalan,3)+' T':'—';
+  const ayPct=ayHedef&&ayHedef>0?Math.min(100,(ayUretim/ayHedef*100)):0;
+  document.getElementById('prog-ay-fill').style.width=ayPct+'%';
+  document.getElementById('prog-ay-fill').style.background=ayPct>=97?'#22c55e':ayPct>=70?'#eab308':'#ef4444';
+  document.getElementById('prog-ay-pct').textContent=ayPct.toFixed(1)+'%';
+  document.getElementById('prog-ay-lbl').textContent=AYLAR[ay]+' '+yil;
+
+  // Yıllık
+  const yilEntries=Object.values(gunler).filter(g=>new Date(g.tarih).getFullYear()===yil);
+  const yilUretim=yilEntries.reduce((s,g)=>s+g.uretim,0);
+  const yilHedef=yillikHedefAl(yil);
+  const yilKalan=yilHedef!==null?(yilHedef-yilUretim):null;
+  document.getElementById('kpi-yilHedef').textContent=yilHedef!==null?fmt(yilHedef,3)+' T':'—';
+  document.getElementById('kpi-yilUretim').textContent=fmt(yilUretim,3)+' T';
+  document.getElementById('kpi-yilKalan').textContent=yilKalan!==null?fmt(yilKalan,3)+' T':'—';
+  const yilPct=yilHedef&&yilHedef>0?Math.min(100,(yilUretim/yilHedef*100)):0;
+  document.getElementById('prog-yil-fill').style.width=yilPct+'%';
+  document.getElementById('prog-yil-fill').style.background=yilPct>=97?'#22c55e':yilPct>=50?'#a78bfa':'#ef4444';
+  document.getElementById('prog-yil-pct').textContent=yilPct.toFixed(1)+'%';
+
+  // Bu hafta (Pzt-Paz)
+  const bugun=new Date(today);
+  const hftBaslangic=new Date(bugun);
+  hftBaslangic.setDate(bugun.getDate()-((bugun.getDay()+6)%7));
+  const hftBitis=new Date(hftBaslangic);hftBitis.setDate(hftBaslangic.getDate()+6);
+  const hftEntries=Object.values(gunler).filter(g=>{
+    const gd=new Date(g.tarih);return gd>=hftBaslangic&&gd<=hftBitis;
+  });
+  const hftUretim=hftEntries.reduce((s,g)=>s+g.uretim,0);
+  const hftGunSayisi=hftEntries.length;
+  const hftHedefSum=hftEntries.reduce((s,g)=>s+(g.gunHedef||0),0);
+  const hftVerimSum=hftEntries.filter(g=>g.verim).reduce((s,g)=>s+g.verim,0);
+  const hftVerimOrt=hftEntries.filter(g=>g.verim).length>0?hftVerimSum/hftEntries.filter(g=>g.verim).length:null;
+  document.getElementById('kpi-hftHedef').textContent=fmt(hftHedefSum,3)+' T';
+  document.getElementById('kpi-hftUretim').textContent=fmt(hftUretim,3)+' T';
+  document.getElementById('kpi-hftVerim').textContent=fmt(hftVerimOrt,2)+' kg/A·S';
+  const hftFark=hftUretim-hftHedefSum;
+  const hftFEl=document.getElementById('kpi-hftFark');
+  hftFEl.textContent=(hftFark>=0?'+':'')+fmt(hftFark,3)+' T';
+  hftFEl.className='val '+(hftFark>=0?'c-green':'c-red');
+
+  // Son 5 gün tablosu
+  const sortedDays=Object.values(gunler).sort((a,b)=>b.tarih.localeCompare(a.tarih)).slice(0,5);
+  const tbody=document.getElementById('son5-tbody');
+  tbody.innerHTML=sortedDays.map(g=>`
+    <tr>
+      <td>${g.tarih}</td>
+      <td class="${g.gunHedef&&g.uretim>=g.gunHedef*0.97?'c-green':'c-red'}">${fmt(g.uretim,3)}</td>
+      <td>${g.gunHedef!==null?fmt(g.gunHedef,3):'—'}</td>
+      <td>${fmt(g.verim,2)}</td>
+      <td>${g.personelGercek||0}</td>
+      <td>${durum(g.uretim,g.gunHedef)}</td>
+    </tr>`).join('');
+
+  // Uyarı
+  const uyari=document.getElementById('uyari-box');
+  if(bg&&bg.gunHedef&&bg.uretim<bg.gunHedef*0.85){
+    uyari.innerHTML=`<div class="warn-box">⚠️ <strong>Bugün hedefe ulaşılamadı!</strong> Gerçekleşen: ${fmt(bg.uretim,3)} T / Hedef: ${fmt(bg.gunHedef,3)} T (${(bg.uretim/bg.gunHedef*100).toFixed(1)}%)${bg.not?' — Not: '+bg.not:''}</div>`;
+  } else if(!gunler[today]){
+    uyari.innerHTML=`<div class="info-box">📋 Bugün (${today}) henüz veri girilmedi. <a href="#" onclick="showPage('gunluk');return false;" style="color:var(--blue)">Giriş Yap →</a></div>`;
+  } else {
+    uyari.innerHTML='';
+  }
+}
+</script>
+<script>
+// ==================== HAFTALIK ====================
+function haftaInit(){
+  const inp=document.getElementById('hft-baslangic');
+  if(!inp.value){
+    const d=new Date();
+    d.setDate(d.getDate()-((d.getDay()+6)%7));
+    inp.value=dateStr(d);
+  }
+  haftaGoster();
+}
+
+function haftaGoster(){
+  const baslangic=document.getElementById('hft-baslangic').value;
+  if(!baslangic)return;
+  const bas=new Date(baslangic);
+  const bit=new Date(bas);bit.setDate(bas.getDate()+6);
+  const gunler=DB.load('gunler',{});
+  const entries=Object.values(gunler).filter(g=>{
+    const gd=new Date(g.tarih);return gd>=bas&&gd<=bit;
+  }).sort((a,b)=>a.tarih.localeCompare(b.tarih));
+
+  const totUretim=entries.reduce((s,g)=>s+g.uretim,0);
+  const totHedef=entries.reduce((s,g)=>s+(g.gunHedef||0),0);
+  const verimList=entries.filter(g=>g.verim);
+  const ortVerim=verimList.length>0?verimList.reduce((s,g)=>s+g.verim,0)/verimList.length:null;
+  const totDev=entries.reduce((s,g)=>s+(g.toplamDevamsiz||0),0);
+
+  document.getElementById('hft-kpi-hedef').textContent=fmt(totHedef,3)+' T';
+  document.getElementById('hft-kpi-gercek').textContent=fmt(totUretim,3)+' T';
+  document.getElementById('hft-kpi-verim').textContent=fmt(ortVerim,2);
+  document.getElementById('hft-kpi-devamsizlik').textContent=totDev;
+  const fark=totUretim-totHedef;
+  const fEl=document.getElementById('hft-kpi-fark');
+  fEl.textContent=(fark>=0?'+':'')+fmt(fark,3)+' T';
+  fEl.className='val '+(fark>=0?'c-green':'c-red');
+
+  document.getElementById('hft-tbody').innerHTML=entries.map(g=>`
+    <tr>
+      <td>${g.tarih}</td>
+      <td class="${g.gunHedef&&g.uretim>=g.gunHedef*0.97?'c-green':'c-red'}">${fmt(g.uretim,3)}</td>
+      <td>${g.gunHedef!==null?fmt(g.gunHedef,3):'—'}</td>
+      <td>${fmt(g.verim,2)}</td>
+      <td>${g.personelGercek||0}</td>
+      <td>${g.toplamDevamsiz||0}</td>
+      <td>${durum(g.uretim,g.gunHedef)}</td>
+    </tr>`).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--muted)">Bu hafta için veri yok</td></tr>';
+}
+
+// ==================== AYLIK ====================
+function aylikInit(){
+  const selYil=document.getElementById('ay-yil');
+  if(selYil.options.length===0){
+    const yil=new Date().getFullYear();
+    for(let y=yil-1;y<=yil+1;y++){
+      const o=document.createElement('option');o.value=y;o.textContent=y;
+      if(y===yil)o.selected=true;
+      selYil.appendChild(o);
+    }
+  }
+  document.getElementById('ay-ay').value=new Date().getMonth();
+  aylikGoster();
+}
+
+function aylikGoster(){
+  const yil=parseInt(document.getElementById('ay-yil').value);
+  const ay=parseInt(document.getElementById('ay-ay').value);
+  const gunler=DB.load('gunler',{});
+  const entries=Object.values(gunler).filter(g=>{
+    const gd=new Date(g.tarih);return gd.getFullYear()===yil&&gd.getMonth()===ay;
+  }).sort((a,b)=>a.tarih.localeCompare(b.tarih));
+
+  const totUretim=entries.reduce((s,g)=>s+g.uretim,0);
+  const ayHedef=aylikHedefAl(yil,ay);
+  const verimList=entries.filter(g=>g.verim);
+  const ortVerim=verimList.length>0?verimList.reduce((s,g)=>s+g.verim,0)/verimList.length:null;
+  const totDev=entries.reduce((s,g)=>s+(g.toplamDevamsiz||0),0);
+  const totSaat=entries.reduce((s,g)=>s+((g.personelGercek||0)*(g.mesai||8)),0);
+  const fark=ayHedef!==null?(totUretim-ayHedef):null;
+
+  document.getElementById('ay-kpi-hedef').textContent=ayHedef!==null?fmt(ayHedef,3)+' T':'—';
+  document.getElementById('ay-kpi-gercek').textContent=fmt(totUretim,3)+' T';
+  document.getElementById('ay-kpi-verim').textContent=fmt(ortVerim,2);
+  document.getElementById('ay-kpi-devamsizlik').textContent=totDev;
+  document.getElementById('ay-kpi-calismaSaati').textContent=fmt(totSaat,0)+' sa';
+  const fEl=document.getElementById('ay-kpi-fark');
+  fEl.textContent=fark!==null?(fark>=0?'+':'')+fmt(fark,3)+' T':'—';
+  fEl.className='val '+(fark===null?'':'fark'+(fark>=0?'c-green':'c-red'));
+
+  document.getElementById('ay-tbody').innerHTML=entries.map(g=>`
+    <tr>
+      <td>${g.tarih}</td>
+      <td class="${g.gunHedef&&g.uretim>=g.gunHedef*0.97?'c-green':'c-red'}">${fmt(g.uretim,3)}</td>
+      <td>${g.gunHedef!==null?fmt(g.gunHedef,3):'—'}</td>
+      <td>${fmt(g.verim,2)}</td>
+      <td>${g.personelGercek||0}</td>
+      <td>${g.toplamDevamsiz||0}</td>
+      <td class="note-cell" onclick="notGoster('${g.tarih}')" title="${g.not||''}">${g.not||'—'}</td>
+      <td><button class="del-btn" onclick="kayitSil('${g.tarih}')">🗑</button></td>
+    </tr>`).join('')||'<tr><td colspan="8" style="text-align:center;color:var(--muted)">Bu ay için veri yok</td></tr>';
+}
+
+function kayitSil(tarih){
+  if(!confirm(`${tarih} tarihli kayıt silinsin mi?`))return;
+  const gunler=DB.load('gunler',{});
+  delete gunler[tarih];
+  DB.save('gunler',gunler);
+  aylikGoster();anasayfaGuncelle();
+}
+
+function notGoster(tarih){
+  const gunler=DB.load('gunler',{});
+  const g=gunler[tarih];
+  if(!g)return;
+  document.getElementById('modal-icerik').innerHTML=`
+    <p style="font-size:0.82rem;color:var(--sub);margin-bottom:10px;">${tarih}</p>
+    <div class="kpi-grid" style="margin-bottom:12px">
+      <div class="kpi"><div class="val c-green">${fmt(g.uretim,3)}</div><div class="lbl">Üretim (T)</div></div>
+      <div class="kpi"><div class="val c-yellow">${fmt(g.verim,2)}</div><div class="lbl">kg/A·Saat</div></div>
+    </div>
+    <p style="font-size:0.82rem;color:var(--sub)">Personel: ${g.personelGercek||0} / ${g.personelPlan||0} &nbsp;|&nbsp; Mesai: ${g.mesai||8}sa</p>
+    <p style="font-size:0.82rem;color:var(--sub);margin-top:4px;">Dev: İstirahat:${g.istirahat||0} Mazeret:${g.mazeret||0} İzinsiz:${g.izinsiz||0}</p>
+    ${g.not?`<div class="warn-box" style="margin-top:10px;"><strong>📝 Not:</strong><br>${g.not}</div>`:'<p style="margin-top:10px;color:var(--muted);">Not yok</p>'}`;
+  document.getElementById('not-modal').classList.add('open');
+}
+
+function modalKapat(){document.getElementById('not-modal').classList.remove('open');}
+document.getElementById('not-modal').addEventListener('click',function(e){if(e.target===this)modalKapat();});
+
+// ==================== AYARLAR ====================
+function ayarlarYukle(){
+  const yil=new Date().getFullYear();
+  const selYil=document.getElementById('ayar-yil');
+  const selGunYil=document.getElementById('ayar-gunYil');
+  if(selYil.options.length===0){
+    for(let y=yil-1;y<=yil+2;y++){
+      [selYil,selGunYil].forEach(s=>{
+        const o=document.createElement('option');o.value=y;o.textContent=y;
+        if(y===yil)o.selected=true;
+        s.appendChild(o);
+      });
+    }
+  }
+  hedefYukle();gunSayisiYukle();
+}
+
+function hedefYukle(){
+  const yil=document.getElementById('ayar-yil').value;
+  const hedefler=DB.load('hedefler',{});
+  const h=hedefler[yil]||{};
+  document.getElementById('ayar-yilHedef').value=h.yillik||'';
+  for(let i=0;i<12;i++){
+    document.getElementById(`h-${i}`).value=(h.aylar&&h.aylar[i]!=null)?h.aylar[i]:'';
+  }
+}
+document.getElementById('ayar-yil').addEventListener('change',hedefYukle);
+
+function hedefleriKaydet(){
+  const yil=document.getElementById('ayar-yil').value;
+  const hedefler=DB.load('hedefler',{});
+  const aylar={};
+  for(let i=0;i<12;i++){
+    const v=document.getElementById(`h-${i}`).value;
+    aylar[i]=v!==''?parseFloat(v):null;
+  }
+  hedefler[yil]={yillik:parseFloat(document.getElementById('ayar-yilHedef').value)||null,aylar};
+  DB.save('hedefler',hedefler);
+  alert(`✅ ${yil} yılı hedefleri kaydedildi!`);
+}
+
+function gunSayisiYukle(){
+  const yil=document.getElementById('ayar-gunYil').value;
+  const gs=DB.load('gunSayilari',{});
+  const g=gs[yil]||{};
+  for(let i=0;i<12;i++){
+    document.getElementById(`g-${i}`).value=(g[i]!=null)?g[i]:'';
+  }
+}
+document.getElementById('ayar-gunYil').addEventListener('change',gunSayisiYukle);
+
+function gunSayisiKaydet(){
+  const yil=document.getElementById('ayar-gunYil').value;
+  const gs=DB.load('gunSayilari',{});
+  const g={};
+  for(let i=0;i<12;i++){
+    const v=document.getElementById(`g-${i}`).value;
+    g[i]=v!==''?parseInt(v):null;
+  }
+  gs[yil]=g;
+  DB.save('gunSayilari',gs);
+  alert(`✅ ${yil} yılı çalışma gün sayıları kaydedildi!`);
+}
+
+function veriIndir(){
+  const data={
+    gunler:DB.load('gunler',{}),
+    hedefler:DB.load('hedefler',{}),
+    gunSayilari:DB.load('gunSayilari',{})
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`boya_uretim_${todayStr()}.json`;
+  a.click();
+}
+
+function veriYukle(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.gunler)DB.save('gunler',data.gunler);
+      if(data.hedefler)DB.save('hedefler',data.hedefler);
+      if(data.gunSayilari)DB.save('gunSayilari',data.gunSayilari);
+      alert('✅ Veriler başarıyla yüklendi!');
+      anasayfaGuncelle();
+    }catch(err){alert('❌ Geçersiz JSON dosyası!');}
+  };
+  reader.readAsText(file);
+}
+
+function veriSifirla(){
+  if(!confirm('⚠️ TÜM VERİLER SİLİNECEK! Emin misiniz?'))return;
+  if(!confirm('Son kez onaylıyor musunuz? Bu işlem geri alınamaz!'))return;
+  ['gunler','hedefler','gunSayilari'].forEach(k=>localStorage.removeItem('boya_'+k));
+  alert('✅ Tüm veriler silindi.');location.reload();
+}
+
+// ==================== BAŞLANGIÇ ====================
+(function init(){
+  document.getElementById('headerDate').textContent=
+    new Date().toLocaleDateString('tr-TR',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+
+  // Ayar sayfası yıl seçimleri başlat
+  const yil=new Date().getFullYear();
+  ['ayar-yil','ayar-gunYil','ay-yil'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&el.options.length===0){
+      for(let y=yil-1;y<=yil+2;y++){
+        const o=document.createElement('option');o.value=y;o.textContent=y;
+        if(y===yil)o.selected=true;
+        el.appendChild(o);
+      }
+    }
+  });
+
+  anasayfaGuncelle();
+})();
+</script>
+</body>
+</html>
