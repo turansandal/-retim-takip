@@ -1172,13 +1172,12 @@ const EKIPMAN = [
 ];
 
 function dynomillVeriAl() {
-  const kayit = localStorage.getItem('dynomill_data');
-  return kayit ? JSON.parse(kayit) : JSON.parse(JSON.stringify(DYNOMILL_VARSAYILAN));
+  return DB.load('dynomill', JSON.parse(JSON.stringify(DYNOMILL_VARSAYILAN)));
 }
-function dynomillVeriKaydet(data) {
-  localStorage.setItem('dynomill_data', JSON.stringify(data));
-}
+async function dynomillVeriKaydet(data) {
+  await DB.save('dynomill', data);
 
+}
 function dynomillYukle() {
   const data = dynomillVeriAl();
   const el = document.getElementById('dynomill-listesi');
@@ -1218,24 +1217,24 @@ function dynomillYukle() {
     </tr>`).join('');
 }
 
-function urunGuncelle(mi, ui, alan, deger) {
+async function urunGuncelle(mi, ui, alan, deger) {
   const data = dynomillVeriAl();
   data[mi].urunler[ui][alan] = deger;
-  dynomillVeriKaydet(data);
+  await dynomillVeriKaydet(data);
 }
 
-function urunEkle(mi) {
+async function urunEkle(mi) {
   const data = dynomillVeriAl();
   data[mi].urunler.push({kod:'Yeni Ürün',renk:'',boncukKg:90,boncukEbat:'1.8-2.0',toplamKg:0});
-  dynomillVeriKaydet(data);
+  await dynomillVeriKaydet(data);
   dynomillYukle();
 }
 
-function urunSil(mi, ui) {
+async function urunSil(mi, ui) {
   if (!confirm('Bu ürün silinsin mi?')) return;
   const data = dynomillVeriAl();
   data[mi].urunler.splice(ui, 1);
-  dynomillVeriKaydet(data);
+  await dynomillVeriKaydet(data);
   dynomillYukle();
 }
 
