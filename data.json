@@ -1,0 +1,74 @@
+{
+  "gunler": {
+    "2026-01-05": {"tarih":"2026-01-05","uretim":0,"personelGercek":88,"personelPlan":88,"mesai":8,"plan":0,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 1 - Çalışma yok","gunHedef":160.0,"verim":null,"toplamDevamsiz":0},
+    "2026-01-12": {"tarih":"2026-01-12","uretim":486,"personelGercek":88,"personelPlan":88,"mesai":8,"plan":486,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 2 - 5 gün","gunHedef":160.0,"verim":86.96,"toplamDevamsiz":0},
+    "2026-01-19": {"tarih":"2026-01-19","uretim":1343,"personelGercek":88,"personelPlan":88,"mesai":8,"plan":1343,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 3 - 6 gün","gunHedef":160.0,"verim":317.52,"toplamDevamsiz":0},
+    "2026-01-26": {"tarih":"2026-01-26","uretim":898,"personelGercek":88,"personelPlan":88,"mesai":8,"plan":898,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 4 - 6 gün","gunHedef":160.0,"verim":212.40,"toplamDevamsiz":0},
+    "2026-02-02": {"tarih":"2026-02-02","uretim":598,"personelGercek":86,"personelPlan":86,"mesai":8,"plan":598,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 6 - 5 gün","gunHedef":190.48,"verim":173.84,"toplamDevamsiz":0},
+    "2026-02-09": {"tarih":"2026-02-09","uretim":733,"personelGercek":83,"personelPlan":83,"mesai":8,"plan":733,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 7 - 5 gün","gunHedef":190.48,"verim":220.48,"toplamDevamsiz":0},
+    "2026-02-16": {"tarih":"2026-02-16","uretim":893,"personelGercek":83,"personelPlan":83,"mesai":8,"plan":893,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 8 - 5 gün","gunHedef":190.48,"verim":268.55,"toplamDevamsiz":0},
+    "2026-02-23": {"tarih":"2026-02-23","uretim":775,"personelGercek":83,"personelPlan":83,"mesai":8,"plan":775,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 9 - 5 gün","gunHedef":190.48,"verim":233.03,"toplamDevamsiz":0},
+    "2026-03-02": {"tarih":"2026-03-02","uretim":746,"personelGercek":82,"personelPlan":82,"mesai":8,"plan":746,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 10 - 5 gün","gunHedef":183.33,"verim":226.83,"toplamDevamsiz":0},
+    "2026-03-09": {"tarih":"2026-03-09","uretim":850,"personelGercek":82,"personelPlan":82,"mesai":8,"plan":850,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 11 - 5 gün","gunHedef":183.33,"verim":258.50,"toplamDevamsiz":0},
+    "2026-03-16": {"tarih":"2026-03-16","uretim":0,"personelGercek":82,"personelPlan":82,"mesai":8,"plan":0,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 12 - Çalışma yok","gunHedef":183.33,"verim":null,"toplamDevamsiz":0},
+    "2026-03-23": {"tarih":"2026-03-23","uretim":1416,"personelGercek":81,"personelPlan":82,"mesai":8,"plan":1416,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":1,"not":"Hafta 13 - 6 gün","gunHedef":183.33,"verim":435.68,"toplamDevamsiz":1},
+    "2026-03-30": {"tarih":"2026-03-30","uretim":519,"personelGercek":82,"personelPlan":82,"mesai":8,"plan":519,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 14 - 2 gün","gunHedef":183.33,"verim":197.94,"toplamDevamsiz":0},
+    "2026-04-06": {"tarih":"2026-04-06","uretim":890,"personelGercek":82,"personelPlan":82,"mesai":8,"plan":890,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 15 - 4 gün","gunHedef":200.0,"verim":340.33,"toplamDevamsiz":0},
+    "2026-04-13": {"tarih":"2026-04-13","uretim":1082,"personelGercek":82,"personelPlan":82,"mesai":8,"plan":1082,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 16 - 6 gün","gunHedef":200.0,"verim":276.28,"toplamDevamsiz":0},
+    "2026-04-20": {"tarih":"2026-04-20","uretim":1152,"personelGercek":82,"personelPlan":82,"mesai":8,"plan":1152,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 17 - 6 gün","gunHedef":200.0,"verim":294.12,"toplamDevamsiz":0},
+    "2026-04-27": {"tarih":"2026-04-27","uretim":883,"personelGercek":82,"personelPlan":82,"mesai":8,"plan":883,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 18 - 5 gün","gunHedef":200.0,"verim":268.14,"toplamDevamsiz":0},
+    "2026-05-04": {"tarih":"2026-05-04","uretim":846,"personelGercek":82,"personelPlan":82,"mesai":8,"plan":846,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 19/Nisan sonu - 4 gün","gunHedef":200.0,"verim":257.01,"toplamDevamsiz":0},
+    "2026-05-11": {"tarih":"2026-05-11","uretim":1417,"personelGercek":81,"personelPlan":81,"mesai":8,"plan":1417,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 19 - 6 gün","gunHedef":206.06,"verim":436.88,"toplamDevamsiz":0},
+    "2026-05-18": {"tarih":"2026-05-18","uretim":1399,"personelGercek":81,"personelPlan":81,"mesai":8,"plan":1399,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 20 - 6 gün","gunHedef":206.06,"verim":431.33,"toplamDevamsiz":0},
+    "2026-05-25": {"tarih":"2026-05-25","uretim":939,"personelGercek":81,"personelPlan":81,"mesai":8,"plan":939,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 21 - 5 gün","gunHedef":206.06,"verim":289.51,"toplamDevamsiz":0},
+    "2026-06-01": {"tarih":"2026-06-01","uretim":1291,"personelGercek":86,"personelPlan":86,"mesai":8,"plan":1291,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 23 - 6 gün","gunHedef":230.77,"verim":374.71,"toplamDevamsiz":0},
+    "2026-06-08": {"tarih":"2026-06-08","uretim":1349,"personelGercek":86,"personelPlan":86,"mesai":8,"plan":1349,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 24 - 6 gün","gunHedef":230.77,"verim":391.13,"toplamDevamsiz":0},
+    "2026-06-15": {"tarih":"2026-06-15","uretim":1065,"personelGercek":85,"personelPlan":86,"mesai":8,"plan":1065,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":1,"not":"Hafta 25 - 6 gün","gunHedef":230.77,"verim":311.40,"toplamDevamsiz":1},
+    "2026-06-22": {"tarih":"2026-06-22","uretim":822,"personelGercek":85,"personelPlan":86,"mesai":8,"plan":822,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":1,"not":"Hafta 26 - 6 gün","gunHedef":230.77,"verim":240.44,"toplamDevamsiz":1},
+    "2026-06-29": {"tarih":"2026-06-29","uretim":240,"personelGercek":84,"personelPlan":84,"mesai":8,"plan":240,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 27 - 2 gün","gunHedef":230.77,"verim":178.57,"toplamDevamsiz":0},
+    "2026-07-06": {"tarih":"2026-07-06","uretim":914,"personelGercek":84,"personelPlan":84,"mesai":8,"plan":914,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 27/Temmuz - 6 gün","gunHedef":211.54,"verim":271.13,"toplamDevamsiz":0},
+    "2026-07-13": {"tarih":"2026-07-13","uretim":1353,"personelGercek":84,"personelPlan":84,"mesai":8,"plan":1353,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 28 - 6 gün","gunHedef":211.54,"verim":401.19,"toplamDevamsiz":0},
+    "2026-07-20": {"tarih":"2026-07-20","uretim":1004,"personelGercek":84,"personelPlan":84,"mesai":8,"plan":1004,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 29 - 5 gün","gunHedef":211.54,"verim":297.62,"toplamDevamsiz":0},
+    "2026-07-27": {"tarih":"2026-07-27","uretim":934,"personelGercek":84,"personelPlan":84,"mesai":8,"plan":934,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 30 - 6 gün","gunHedef":211.54,"verim":276.98,"toplamDevamsiz":0},
+    "2026-08-03": {"tarih":"2026-08-03","uretim":824,"personelGercek":84,"personelPlan":84,"mesai":8,"plan":824,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 31 - 5 gün","gunHedef":211.54,"verim":244.35,"toplamDevamsiz":0},
+    "2026-08-10": {"tarih":"2026-08-10","uretim":833,"personelGercek":84,"personelPlan":84,"mesai":8,"plan":833,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 31/Ağustos - 6 gün","gunHedef":222.22,"verim":246.73,"toplamDevamsiz":0},
+    "2026-08-17": {"tarih":"2026-08-17","uretim":972,"personelGercek":84,"personelPlan":84,"mesai":8,"plan":972,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 32 - 6 gün","gunHedef":222.22,"verim":288.39,"toplamDevamsiz":0},
+    "2026-08-24": {"tarih":"2026-08-24","uretim":728,"personelGercek":84,"personelPlan":84,"mesai":8,"plan":728,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 33 - 5 gün","gunHedef":222.22,"verim":215.48,"toplamDevamsiz":0},
+    "2026-08-31": {"tarih":"2026-08-31","uretim":1114,"personelGercek":84,"personelPlan":84,"mesai":8,"plan":1114,"sarkan":0,"ilave":0,"istirahat":0,"mazeret":0,"izinsiz":0,"not":"Hafta 34 - 6 gün","verim":330.36,"toplamDevamsiz":0}
+  },
+  "hedefler": {
+    "2026": {
+      "yillik": 50000,
+      "aylar": {
+        "0": 3600,
+        "1": 4000,
+        "2": 3300,
+        "3": 5000,
+        "4": 3500,
+        "5": 6000,
+        "6": 5500,
+        "7": 4000,
+        "8": null,
+        "9": null,
+        "10": null,
+        "11": null
+      }
+    }
+  },
+  "gunSayilari": {
+    "2026": {
+      "0": 23,
+      "1": 21,
+      "2": 18,
+      "3": 25,
+      "4": 17,
+      "5": 26,
+      "6": 26,
+      "7": 18,
+      "8": 22,
+      "9": 23,
+      "10": 21,
+      "11": 21
+    }
+  }
+}
