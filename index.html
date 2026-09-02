@@ -72,6 +72,24 @@ tr:hover td{background:#1a2740;}
 .modal-title{font-size:0.95rem;font-weight:700;color:var(--blue);margin-bottom:13px;}
 .modal-close{float:right;background:none;border:none;color:var(--sub);font-size:1.4rem;cursor:pointer;margin:0;padding:0;width:auto;line-height:1;margin-top:-4px;}
 .note-cell{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;color:var(--sub);}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cal-nav h3{font-size:1rem;font-weight:700;color:var(--text);}
+.cal-nav button{width:auto;padding:8px 16px;margin:0;background:#1e293b;border:1px solid var(--border);color:var(--blue);border-radius:8px;font-size:1rem;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-dow{text-align:center;font-size:0.62rem;color:var(--muted);padding:4px 0;font-weight:600;}
+.cal-day{background:var(--bg3);border-radius:8px;min-height:72px;padding:5px;border:1px solid var(--border);cursor:pointer;transition:border .15s;position:relative;}
+.cal-day:active{opacity:.8;}
+.cal-day.today{border-color:var(--blue);}
+.cal-day.has-data{border-color:#334155;}
+.cal-day.good{border-left:3px solid var(--green);}
+.cal-day.mid{border-left:3px solid var(--yellow);}
+.cal-day.bad{border-left:3px solid var(--red);}
+.cal-day.empty{background:transparent;border-color:transparent;cursor:default;min-height:72px;}
+.cal-day .dn{font-size:0.72rem;color:var(--sub);font-weight:600;margin-bottom:3px;}
+.cal-day.today .dn{color:var(--blue);font-weight:700;}
+.cal-day .du{font-size:0.7rem;color:var(--green);font-weight:600;line-height:1.3;}
+.cal-day .dv{font-size:0.62rem;color:var(--yellow);line-height:1.3;}
+.cal-day .dn-holiday{font-size:0.55rem;color:var(--red);line-height:1.2;}
 </style>
 </head>
 <body>
@@ -79,11 +97,13 @@ tr:hover td{background:#1a2740;}
   <h1>🎨 Boya Üretim Takip</h1>
   <span class="date-badge" id="headerDate"></span>
 </header>
+<div id="sync-bar" style="background:#0f172a;border-bottom:1px solid #1e293b;padding:5px 18px;font-size:0.75rem;text-align:right;"><span id="sync-status" style="color:#334155">☁️ GitHub Sync</span></div>
 
 <nav class="bottom-nav">
   <button class="bnav-item active" onclick="showPage('anasayfa')"><span class="icon">🏠</span>Ana Sayfa</button>
   <button class="bnav-item" onclick="showPage('gunluk')"><span class="icon">📋</span>Gün Girişi</button>
   <button class="bnav-item" onclick="showPage('haftalik')"><span class="icon">📅</span>Haftalık</button>
+  <button class="bnav-item" onclick="showPage('takvim')"><span class="icon">📆</span>Takvim</button>
   <button class="bnav-item" onclick="showPage('aylik')"><span class="icon">📊</span>Aylık</button>
   <button class="bnav-item" onclick="showPage('ayarlar')"><span class="icon">⚙️</span>Ayarlar</button>
 </nav>
@@ -359,6 +379,14 @@ tr:hover td{background:#1a2740;}
   </div>
 
   <div class="card">
+    <div class="card-title">🔑 GitHub Bağlantısı</div>
+    <div class="info-box">Token bir kez girilir, cihazda saklanır. Yeni token alırsan buradan güncelleyebilirsin.</div>
+    <label class="first">Personal Access Token</label>
+    <input type="password" id="gh-token-input" placeholder="ghp_..." autocomplete="off">
+    <button class="btn-primary" onclick="tokenKaydet()">💾 Token Kaydet</button>
+    <div id="token-msg" style="margin-top:8px;font-size:0.78rem;"></div>
+  </div>
+  <div class="card">
     <div class="card-title">⚠️ Veri Yönetimi</div>
     <button class="btn-warning" onclick="veriIndir()">📥 Tüm Veriyi İndir (JSON)</button>
     <label style="margin-top:12px;">Veri Yükle (JSON dosyası)</label>
@@ -367,6 +395,37 @@ tr:hover td{background:#1a2740;}
   </div>
 </div>
 
+<!-- TAKVİM SAYFASI -->
+<div id="page-takvim" class="page">
+  <div class="cal-nav">
+    <button onclick="takvimAyDegistir(-1)"><!-- NOT MODAL -->#8249;</button>
+    <h3 id="cal-baslik">—</h3>
+    <button onclick="takvimAyDegistir(1)"><!-- NOT MODAL -->#8250;</button>
+  </div>
+  <div class="cal-grid" id="cal-dow-row">
+    <div class="cal-dow">Pzt</div><div class="cal-dow">Sal</div><div class="cal-dow">Çar</div>
+    <div class="cal-dow">Per</div><div class="cal-dow">Cum</div>
+    <div class="cal-dow" style="color:#ef4444">Cmt</div><div class="cal-dow" style="color:#ef4444">Paz</div>
+  </div>
+  <div class="cal-grid" id="cal-body" style="margin-bottom:16px"></div>
+  <div class="card" id="cal-ozet">
+    <div class="card-title">📊 Aylık Özet</div>
+    <div class="kpi-grid g3">
+      <div class="kpi"><div class="val c-green" id="cal-kpi-uretim">—</div><div class="lbl">Kümülatif Üretim</div><div class="sub">Ton</div></div>
+      <div class="kpi"><div class="val c-yellow" id="cal-kpi-verim">—</div><div class="lbl">Kümülatif Verim</div><div class="sub">kg/A·Saat</div></div>
+      <div class="kpi"><div class="val c-blue" id="cal-kpi-hedef">—</div><div class="lbl">Aylık Hedef</div><div class="sub">Ton</div></div>
+    </div>
+    <div class="kpi-grid g3" style="margin-top:10px">
+      <div class="kpi"><div class="val c-purple" id="cal-kpi-calisilan">—</div><div class="lbl">Çalışılan Gün</div><div class="sub">Gün</div></div>
+      <div class="kpi"><div class="val c-orange" id="cal-kpi-kalan">—</div><div class="lbl">Kalan İş Günü</div><div class="sub">Gün</div></div>
+      <div class="kpi"><div class="val c-red" id="cal-kpi-gereken">—</div><div class="lbl">Gereken Günlük</div><div class="sub">Ton/Gün</div></div>
+    </div>
+    <div class="progress-row" style="margin-top:12px">
+      <div class="progress-label"><span id="cal-prog-lbl">Aylık İlerleme</span><span id="cal-prog-pct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="cal-prog-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
 <!-- NOT MODAL -->
 <div class="modal-overlay" id="not-modal">
   <div class="modal">
@@ -377,105 +436,177 @@ tr:hover td{background:#1a2740;}
 </div>
 <script>
 // ==================== VERİ KATMANI ====================
-const DB = {
-  save(key,val){ try{localStorage.setItem('boya_'+key,JSON.stringify(val));}catch(e){} },
-  load(key,def){ try{const d=localStorage.getItem('boya_'+key);return d?JSON.parse(d):def;}catch(e){return def;} }
+<script>
+// ==================== GITHUB API VERİ KATMANI ====================
+const GH = {
+  token: localStorage.getItem('gh_token') || '',
+  repo: 'turansandal/-retim-takip',
+  branch: 'main',
+  file: 'data.json',
+  _sha: null,
+
+  async readAll() {
+    try {
+      const r = await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.file}?ref=${this.branch}&t=${Date.now()}`, {
+        headers: { 'Authorization': `token ${this.token}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (r.status === 404) { this._sha = null; return null; }
+      const j = await r.json();
+      this._sha = j.sha;
+      return JSON.parse(atob(j.content.replace(/\n/g, '')));
+    } catch(e) { console.error('GH read error:', e); return null; }
+  },
+
+  async writeAll(data) {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+    const body = { message: `Veri: ${new Date().toLocaleString('tr-TR')}`, content, branch: this.branch };
+    if (this._sha) body.sha = this._sha;
+    try {
+      const r = await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.file}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `token ${this.token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!r.ok) { console.error('GH write failed:', r.status); return false; }
+      const j = await r.json();
+      if (j.content && j.content.sha) this._sha = j.content.sha;
+      return true;
+    } catch(e) { console.error('GH write error:', e); return false; }
+  }
 };
 
-// ==================== YARDIMCI FONKSİYONLAR ====================
+// Hibrit DB: önce GitHub, yedek olarak localStorage
+const DB = {
+  _data: null,
+
+  _lsLoad(key, def) {
+    try { const d = localStorage.getItem('boya_' + key); return d ? JSON.parse(d) : def; } catch(e) { return def; }
+  },
+  _lsSave(key, val) {
+    try { localStorage.setItem('boya_' + key, JSON.stringify(val)); } catch(e) {}
+  },
+
+  async init() {
+    syncStatus('loading');
+    const ghData = await GH.readAll();
+    if (ghData && (ghData.gunler || ghData.hedefler || ghData.gunSayilari)) {
+      this._data = ghData;
+      syncStatus('ok', 'GitHub\'dan yüklendi');
+    } else {
+      // localStorage'dan migrate et
+      const ls = {
+        gunler: this._lsLoad('gunler', {}),
+        hedefler: this._lsLoad('hedefler', {}),
+        gunSayilari: this._lsLoad('gunSayilari', {})
+      };
+      this._data = ls;
+      const birSey = Object.keys(ls.gunler).length > 0 || Object.keys(ls.hedefler).length > 0;
+      if (birSey) {
+        const ok = await GH.writeAll(this._data);
+        syncStatus(ok ? 'saved' : 'error', ok ? 'Yerel veriler GitHub\'a aktarıldı' : 'Aktarım hatası');
+      } else {
+        this._data = { gunler: {}, hedefler: {}, gunSayilari: {} };
+        syncStatus('ok', 'Hazır');
+      }
+    }
+  },
+
+  load(key, def) {
+    if (!this._data) return def;
+    return (this._data[key] !== undefined && this._data[key] !== null) ? this._data[key] : def;
+  },
+
+  async save(key, val) {
+    if (!this._data) this._data = {};
+    this._data[key] = val;
+    this._lsSave(key, val); // yedek
+    syncStatus('saving');
+    const ok = await GH.writeAll(this._data);
+    syncStatus(ok ? 'saved' : 'error');
+    return ok;
+  }
+};
+
+function syncStatus(state, msg) {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  const cfg = {
+    loading: ['🔄', 'Yükleniyor...', '#60a5fa'],
+    saving:  ['💾', 'Kaydediliyor...', '#eab308'],
+    saved:   ['✅', msg || 'Kaydedildi', '#22c55e'],
+    ok:      ['☁️', msg || 'Senkronize', '#22c55e'],
+    error:   ['❌', 'Hata! İnternet bağlantısını kontrol et', '#ef4444']
+  };
+  const [icon, text, color] = cfg[state] || cfg.ok;
+  el.innerHTML = `<span style="color:${color}">${icon} ${text}</span>`;
+  if (state === 'saved' || state === 'ok') {
+    setTimeout(() => { el.innerHTML = `<span style="color:#475569">☁️ GitHub Sync</span>`; }, 4000);
+  }
+}
+</script>
+<script>
+const AYLAR=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
 function pad(n){return String(n).padStart(2,'0');}
 function dateStr(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
 function todayStr(){return dateStr(new Date());}
 function fmt(n,d=3){if(n===null||n===undefined||isNaN(n))return '—';return Number(n).toFixed(d);}
-function fmtT(n){return fmt(n,3)+' T';}
-function fmtV(n){return fmt(n,2)+' kg/A·S';}
 
-const AYLAR=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-
-function gunlukHedefHesapla(yil,ay,gunSayisi){
+function gunlukHedefHesapla(yil,ay){
   const hedefler=DB.load('hedefler',{});
   const gunSayilari=DB.load('gunSayilari',{});
-  const key=`${yil}`;
-  const ayKey=`${yil}-${ay}`;
-  let ayHedef=null;
-  if(hedefler[key]){
-    const hk=hedefler[key];
-    if(hk.aylar&&hk.aylar[ay]!=null&&hk.aylar[ay]!=''){
-      ayHedef=parseFloat(hk.aylar[ay]);
-    } else if(hk.yillik){
-      ayHedef=parseFloat(hk.yillik)/12;
-    }
-  }
-  if(ayHedef===null)return null;
-  let gSay=gunSayisi;
-  if(!gSay){
-    const gs=DB.load('gunSayilari',{});
-    if(gs[key]&&gs[key][ay]!=null)gSay=parseInt(gs[key][ay]);
-    else gSay=22;
-  }
-  return gSay>0?(ayHedef/gSay):null;
+  const h=hedefler[`${yil}`];
+  if(!h)return null;
+  let ayH=null;
+  if(h.aylar&&h.aylar[ay]!=null&&h.aylar[ay]!=='') ayH=parseFloat(h.aylar[ay]);
+  else if(h.yillik) ayH=parseFloat(h.yillik)/12;
+  if(ayH===null)return null;
+  const gs=gunSayilari[`${yil}`];
+  const gSay=(gs&&gs[ay]!=null)?parseInt(gs[ay]):22;
+  return gSay>0?(ayH/gSay):null;
 }
-
 function aylikHedefAl(yil,ay){
-  const hedefler=DB.load('hedefler',{});
-  const key=`${yil}`;
-  if(hedefler[key]){
-    const hk=hedefler[key];
-    if(hk.aylar&&hk.aylar[ay]!=null&&hk.aylar[ay]!==''){
-      return parseFloat(hk.aylar[ay]);
-    } else if(hk.yillik){
-      return parseFloat(hk.yillik)/12;
-    }
-  }
+  const h=DB.load('hedefler',{})[`${yil}`];
+  if(!h)return null;
+  if(h.aylar&&h.aylar[ay]!=null&&h.aylar[ay]!=='') return parseFloat(h.aylar[ay]);
+  if(h.yillik) return parseFloat(h.yillik)/12;
   return null;
 }
-
 function yillikHedefAl(yil){
-  const hedefler=DB.load('hedefler',{});
-  if(hedefler[`${yil}`]&&hedefler[`${yil}`].yillik)return parseFloat(hedefler[`${yil}`].yillik);
-  return null;
+  const h=DB.load('hedefler',{})[`${yil}`];
+  return h&&h.yillik?parseFloat(h.yillik):null;
 }
-
-function ayGunSayisi(yil,ay){
-  const gs=DB.load('gunSayilari',{});
-  if(gs[`${yil}`]&&gs[`${yil}`][ay]!=null&&gs[`${yil}`][ay]!=='')return parseInt(gs[`${yil}`][ay]);
-  return 22;
+function verimHesapla(ton,pers,saat){
+  if(!pers||pers<=0||!saat||saat<=0)return null;
+  return (ton*1000)/(pers*saat);
 }
-
-function verimHesapla(uretimTon,personel,mesaiSaat){
-  if(!personel||personel<=0||!mesaiSaat||mesaiSaat<=0)return null;
-  return (uretimTon*1000)/(personel*mesaiSaat);
-}
-
 function durum(gercek,hedef){
-  if(hedef===null||hedef===0)return '<span class="badge bb">—</span>';
-  const oran=gercek/hedef;
-  if(oran>=0.97)return '<span class="badge bg">✅ İYİ</span>';
-  if(oran>=0.85)return '<span class="badge by">⚠️ ORTA</span>';
+  if(!hedef)return '<span class="badge bb">—</span>';
+  const o=gercek/hedef;
+  if(o>=0.97)return '<span class="badge bg">✅ İYİ</span>';
+  if(o>=0.85)return '<span class="badge by">⚠️ ORTA</span>';
   return '<span class="badge br">❌ DÜŞÜK</span>';
 }
 
-// ==================== SAYFA NAVİGASYONU ====================
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  const idx={'anasayfa':0,'gunluk':1,'haftalik':2,'aylik':3,'ayarlar':4};
+  const idx={anasayfa:0,gunluk:1,haftalik:2,takvim:3,aylik:4,ayarlar:5};
   document.querySelectorAll('.bnav-item')[idx[id]].classList.add('active');
   if(id==='anasayfa')anasayfaGuncelle();
   if(id==='gunluk')gunlukFormInit();
   if(id==='haftalik')haftaInit();
+  if(id==='takvim')takvimInit();
   if(id==='aylik')aylikInit();
   if(id==='ayarlar')ayarlarYukle();
 }
 
-// ==================== GÜNLÜK KAYIT ====================
 function gunlukFormInit(){
   const t=document.getElementById('gun-tarih');
   if(!t.value)t.value=todayStr();
 }
 
-function gunKaydet(){
+async function gunKaydet(){
   const tarih=document.getElementById('gun-tarih').value;
   if(!tarih){alert('Tarih seçiniz!');return;}
   const plan=parseFloat(document.getElementById('gun-plan').value)||0;
@@ -489,384 +620,433 @@ function gunKaydet(){
   const mazeret=parseInt(document.getElementById('dev-mazeret').value)||0;
   const izinsiz=parseInt(document.getElementById('dev-izinsiz').value)||0;
   const not=document.getElementById('gun-not').value.trim();
-
   const d=new Date(tarih);
-  const yil=d.getFullYear();const ay=d.getMonth();
-  const gunHdf=gunlukHedefHesapla(yil,ay);
+  const gunH=gunlukHedefHesapla(d.getFullYear(),d.getMonth());
   const verim=verimHesapla(uretim,personelGercek,mesai);
-  const toplamDevamsiz=istirahat+mazeret+izinsiz;
-
+  const toplamDev=istirahat+mazeret+izinsiz;
   const kayit={tarih,plan,sarkan,ilave,uretim,personelPlan,personelGercek,mesai,
-    istirahat,mazeret,izinsiz,not,gunHedef:gunHdf,verim,toplamDevamsiz,
-    ts:Date.now()};
-
+    istirahat,mazeret,izinsiz,not,gunHedef:gunH,verim,toplamDevamsiz:toplamDev,ts:Date.now()};
   const gunler=DB.load('gunler',{});
   gunler[tarih]=kayit;
-  DB.save('gunler',gunler);
-
   const msg=document.getElementById('gun-msg');
-  msg.innerHTML=`<div class="ok-box">✅ ${tarih} tarihi kaydedildi. Üretim: <strong>${fmt(uretim,3)} T</strong> | Verim: <strong>${fmt(verim,2)} kg/A·S</strong></div>`;
-
+  msg.innerHTML=`<div class="warn-box">💾 Kaydediliyor...</div>`;
+  const ok=await DB.save('gunler',gunler);
+  msg.innerHTML=ok
+    ?`<div class="ok-box">✅ ${tarih} kaydedildi — Üretim: <strong>${fmt(uretim,3)} T</strong> | Verim: <strong>${fmt(verim,2)} kg/A·S</strong></div>`
+    :`<div class="warn-box">⚠️ GitHub'a kaydedilemedi, yerel yedek alındı.</div>`;
   hesaplaGosterim(kayit);
-  setTimeout(()=>anasayfaGuncelle(),100);
+  anasayfaGuncelle();
 }
 
 function hesaplaGosterim(k){
-  document.getElementById('calc-gunHedef').textContent=k.gunHedef!==null?fmt(k.gunHedef,3)+'T':'—';
+  document.getElementById('calc-gunHedef').textContent=k.gunHedef!==null?fmt(k.gunHedef,3)+' T':'—';
   document.getElementById('calc-gercek').textContent=fmt(k.uretim,3)+' T';
   document.getElementById('calc-verim').textContent=fmt(k.verim,2)+' kg/A·S';
-  document.getElementById('calc-devamsizlik').textContent=k.toplamDevamsiz+' kişi';
+  document.getElementById('calc-devamsizlik').textContent=(k.toplamDevamsiz||0)+' kişi';
   const fark=k.gunHedef!==null?(k.uretim-k.gunHedef):null;
   const el=document.getElementById('calc-fark');
-  if(fark!==null){
-    el.textContent=(fark>=0?'+':'')+fmt(fark,3)+' T';
-    el.className='val '+(fark>=0?'c-green':'c-red');
-  } else el.textContent='—';
-}
-
-// ==================== ANASAYFA ====================
-function anasayfaGuncelle(){
-  const today=todayStr();
-  const gunler=DB.load('gunler',{});
-  const d=new Date();
-  const yil=d.getFullYear();const ay=d.getMonth();
-
-  // Bugün
-  const bg=gunler[today];
-  if(bg){
-    const el=document.getElementById('kpi-gunHedef');
-    el.textContent=bg.gunHedef!==null?fmt(bg.gunHedef,3)+' T':'—';
-    document.getElementById('kpi-gunUretim').textContent=fmt(bg.uretim,3)+' T';
-    const vEl=document.getElementById('kpi-gunVerim');
-    vEl.textContent=fmt(bg.verim,2);
-    vEl.className='val '+(bg.verim&&bg.verim>=0?'c-yellow':'c-red');
-    document.getElementById('kpi-devamsizlik').textContent=bg.toplamDevamsiz||0;
-  }
-
-  // Bu ay
-  const ayEntries=Object.values(gunler).filter(g=>{
-    const gd=new Date(g.tarih);return gd.getFullYear()===yil&&gd.getMonth()===ay;
-  });
-  const ayUretim=ayEntries.reduce((s,g)=>s+g.uretim,0);
-  const ayHedef=aylikHedefAl(yil,ay);
-  const ayKalan=ayHedef!==null?(ayHedef-ayUretim):null;
-  document.getElementById('kpi-ayHedef').textContent=ayHedef!==null?fmt(ayHedef,3)+' T':'—';
-  document.getElementById('kpi-ayUretim').textContent=fmt(ayUretim,3)+' T';
-  document.getElementById('kpi-ayKalan').textContent=ayKalan!==null?fmt(ayKalan,3)+' T':'—';
-  const ayPct=ayHedef&&ayHedef>0?Math.min(100,(ayUretim/ayHedef*100)):0;
-  document.getElementById('prog-ay-fill').style.width=ayPct+'%';
-  document.getElementById('prog-ay-fill').style.background=ayPct>=97?'#22c55e':ayPct>=70?'#eab308':'#ef4444';
-  document.getElementById('prog-ay-pct').textContent=ayPct.toFixed(1)+'%';
-  document.getElementById('prog-ay-lbl').textContent=AYLAR[ay]+' '+yil;
-
-  // Yıllık
-  const yilEntries=Object.values(gunler).filter(g=>new Date(g.tarih).getFullYear()===yil);
-  const yilUretim=yilEntries.reduce((s,g)=>s+g.uretim,0);
-  const yilHedef=yillikHedefAl(yil);
-  const yilKalan=yilHedef!==null?(yilHedef-yilUretim):null;
-  document.getElementById('kpi-yilHedef').textContent=yilHedef!==null?fmt(yilHedef,3)+' T':'—';
-  document.getElementById('kpi-yilUretim').textContent=fmt(yilUretim,3)+' T';
-  document.getElementById('kpi-yilKalan').textContent=yilKalan!==null?fmt(yilKalan,3)+' T':'—';
-  const yilPct=yilHedef&&yilHedef>0?Math.min(100,(yilUretim/yilHedef*100)):0;
-  document.getElementById('prog-yil-fill').style.width=yilPct+'%';
-  document.getElementById('prog-yil-fill').style.background=yilPct>=97?'#22c55e':yilPct>=50?'#a78bfa':'#ef4444';
-  document.getElementById('prog-yil-pct').textContent=yilPct.toFixed(1)+'%';
-
-  // Bu hafta (Pzt-Paz)
-  const bugun=new Date(today);
-  const hftBaslangic=new Date(bugun);
-  hftBaslangic.setDate(bugun.getDate()-((bugun.getDay()+6)%7));
-  const hftBitis=new Date(hftBaslangic);hftBitis.setDate(hftBaslangic.getDate()+6);
-  const hftEntries=Object.values(gunler).filter(g=>{
-    const gd=new Date(g.tarih);return gd>=hftBaslangic&&gd<=hftBitis;
-  });
-  const hftUretim=hftEntries.reduce((s,g)=>s+g.uretim,0);
-  const hftGunSayisi=hftEntries.length;
-  const hftHedefSum=hftEntries.reduce((s,g)=>s+(g.gunHedef||0),0);
-  const hftVerimSum=hftEntries.filter(g=>g.verim).reduce((s,g)=>s+g.verim,0);
-  const hftVerimOrt=hftEntries.filter(g=>g.verim).length>0?hftVerimSum/hftEntries.filter(g=>g.verim).length:null;
-  document.getElementById('kpi-hftHedef').textContent=fmt(hftHedefSum,3)+' T';
-  document.getElementById('kpi-hftUretim').textContent=fmt(hftUretim,3)+' T';
-  document.getElementById('kpi-hftVerim').textContent=fmt(hftVerimOrt,2)+' kg/A·S';
-  const hftFark=hftUretim-hftHedefSum;
-  const hftFEl=document.getElementById('kpi-hftFark');
-  hftFEl.textContent=(hftFark>=0?'+':'')+fmt(hftFark,3)+' T';
-  hftFEl.className='val '+(hftFark>=0?'c-green':'c-red');
-
-  // Son 5 gün tablosu
-  const sortedDays=Object.values(gunler).sort((a,b)=>b.tarih.localeCompare(a.tarih)).slice(0,5);
-  const tbody=document.getElementById('son5-tbody');
-  tbody.innerHTML=sortedDays.map(g=>`
-    <tr>
-      <td>${g.tarih}</td>
-      <td class="${g.gunHedef&&g.uretim>=g.gunHedef*0.97?'c-green':'c-red'}">${fmt(g.uretim,3)}</td>
-      <td>${g.gunHedef!==null?fmt(g.gunHedef,3):'—'}</td>
-      <td>${fmt(g.verim,2)}</td>
-      <td>${g.personelGercek||0}</td>
-      <td>${durum(g.uretim,g.gunHedef)}</td>
-    </tr>`).join('');
-
-  // Uyarı
-  const uyari=document.getElementById('uyari-box');
-  if(bg&&bg.gunHedef&&bg.uretim<bg.gunHedef*0.85){
-    uyari.innerHTML=`<div class="warn-box">⚠️ <strong>Bugün hedefe ulaşılamadı!</strong> Gerçekleşen: ${fmt(bg.uretim,3)} T / Hedef: ${fmt(bg.gunHedef,3)} T (${(bg.uretim/bg.gunHedef*100).toFixed(1)}%)${bg.not?' — Not: '+bg.not:''}</div>`;
-  } else if(!gunler[today]){
-    uyari.innerHTML=`<div class="info-box">📋 Bugün (${today}) henüz veri girilmedi. <a href="#" onclick="showPage('gunluk');return false;" style="color:var(--blue)">Giriş Yap →</a></div>`;
-  } else {
-    uyari.innerHTML='';
-  }
+  if(fark!==null){el.textContent=(fark>=0?'+':'')+fmt(fark,3)+' T';el.className='val '+(fark>=0?'c-green':'c-red');}
+  else el.textContent='—';
 }
 </script>
 <script>
-// ==================== HAFTALIK ====================
+function anasayfaGuncelle(){
+  const today=todayStr();
+  const gunler=DB.load('gunler',{});
+  const d=new Date();const yil=d.getFullYear();const ay=d.getMonth();
+  const bg=gunler[today];
+  if(bg){
+    document.getElementById('kpi-gunHedef').textContent=bg.gunHedef!==null?fmt(bg.gunHedef,3)+' T':'—';
+    document.getElementById('kpi-gunUretim').textContent=fmt(bg.uretim,3)+' T';
+    document.getElementById('kpi-gunVerim').textContent=fmt(bg.verim,2);
+    document.getElementById('kpi-devamsizlik').textContent=bg.toplamDevamsiz||0;
+  }
+  const ayE=Object.values(gunler).filter(g=>{const gd=new Date(g.tarih);return gd.getFullYear()===yil&&gd.getMonth()===ay;});
+  const ayU=ayE.reduce((s,g)=>s+g.uretim,0);
+  const ayH=aylikHedefAl(yil,ay);
+  document.getElementById('kpi-ayHedef').textContent=ayH!==null?fmt(ayH,3)+' T':'—';
+  document.getElementById('kpi-ayUretim').textContent=fmt(ayU,3)+' T';
+  document.getElementById('kpi-ayKalan').textContent=ayH!==null?fmt(ayH-ayU,3)+' T':'—';
+  const ayP=ayH&&ayH>0?Math.min(100,ayU/ayH*100):0;
+  const ayFill=document.getElementById('prog-ay-fill');
+  ayFill.style.width=ayP+'%';ayFill.style.background=ayP>=97?'#22c55e':ayP>=70?'#eab308':'#ef4444';
+  document.getElementById('prog-ay-pct').textContent=ayP.toFixed(1)+'%';
+  document.getElementById('prog-ay-lbl').textContent=AYLAR[ay]+' '+yil;
+  const yilE=Object.values(gunler).filter(g=>new Date(g.tarih).getFullYear()===yil);
+  const yilU=yilE.reduce((s,g)=>s+g.uretim,0);
+  const yilH=yillikHedefAl(yil);
+  document.getElementById('kpi-yilHedef').textContent=yilH!==null?fmt(yilH,3)+' T':'—';
+  document.getElementById('kpi-yilUretim').textContent=fmt(yilU,3)+' T';
+  document.getElementById('kpi-yilKalan').textContent=yilH!==null?fmt(yilH-yilU,3)+' T':'—';
+  const yilP=yilH&&yilH>0?Math.min(100,yilU/yilH*100):0;
+  const yilFill=document.getElementById('prog-yil-fill');
+  yilFill.style.width=yilP+'%';yilFill.style.background=yilP>=97?'#22c55e':yilP>=50?'#a78bfa':'#ef4444';
+  document.getElementById('prog-yil-pct').textContent=yilP.toFixed(1)+'%';
+  const bugun=new Date(today);
+  const hBas=new Date(bugun);hBas.setDate(bugun.getDate()-((bugun.getDay()+6)%7));
+  const hBit=new Date(hBas);hBit.setDate(hBas.getDate()+6);
+  const hE=Object.values(gunler).filter(g=>{const gd=new Date(g.tarih);return gd>=hBas&&gd<=hBit;});
+  const hU=hE.reduce((s,g)=>s+g.uretim,0);
+  const hHdf=hE.reduce((s,g)=>s+(g.gunHedef||0),0);
+  const hVL=hE.filter(g=>g.verim);
+  const hVO=hVL.length>0?hVL.reduce((s,g)=>s+g.verim,0)/hVL.length:null;
+  document.getElementById('kpi-hftHedef').textContent=fmt(hHdf,3)+' T';
+  document.getElementById('kpi-hftUretim').textContent=fmt(hU,3)+' T';
+  document.getElementById('kpi-hftVerim').textContent=fmt(hVO,2)+' kg/A·S';
+  const hF=hU-hHdf;
+  const hFEl=document.getElementById('kpi-hftFark');
+  hFEl.textContent=(hF>=0?'+':'')+fmt(hF,3)+' T';hFEl.className='val '+(hF>=0?'c-green':'c-red');
+  const son5=Object.values(gunler).sort((a,b)=>b.tarih.localeCompare(a.tarih)).slice(0,5);
+  document.getElementById('son5-tbody').innerHTML=son5.map(g=>`
+    <tr><td>${g.tarih}</td>
+    <td class="${g.gunHedef&&g.uretim>=g.gunHedef*0.97?'c-green':'c-red'}">${fmt(g.uretim,3)}</td>
+    <td>${g.gunHedef!==null?fmt(g.gunHedef,3):'—'}</td>
+    <td>${fmt(g.verim,2)}</td><td>${g.personelGercek||0}</td>
+    <td>${durum(g.uretim,g.gunHedef)}</td></tr>`).join('');
+  const uyari=document.getElementById('uyari-box');
+  if(bg&&bg.gunHedef&&bg.uretim<bg.gunHedef*0.85){
+    uyari.innerHTML=`<div class="warn-box">⚠️ <strong>Bugün hedefe ulaşılamadı!</strong> ${fmt(bg.uretim,3)}T / ${fmt(bg.gunHedef,3)}T (${(bg.uretim/bg.gunHedef*100).toFixed(1)}%)${bg.not?' — '+bg.not:''}</div>`;
+  } else if(!bg){
+    uyari.innerHTML=`<div class="info-box">📋 Bugün (${today}) henüz veri girilmedi. <a href="#" onclick="showPage('gunluk');return false;" style="color:var(--blue)">Giriş Yap →</a></div>`;
+  } else { uyari.innerHTML=''; }
+}
+
 function haftaInit(){
   const inp=document.getElementById('hft-baslangic');
-  if(!inp.value){
-    const d=new Date();
-    d.setDate(d.getDate()-((d.getDay()+6)%7));
-    inp.value=dateStr(d);
-  }
+  if(!inp.value){const d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7));inp.value=dateStr(d);}
   haftaGoster();
 }
-
 function haftaGoster(){
-  const baslangic=document.getElementById('hft-baslangic').value;
-  if(!baslangic)return;
-  const bas=new Date(baslangic);
-  const bit=new Date(bas);bit.setDate(bas.getDate()+6);
+  const bas=document.getElementById('hft-baslangic').value;if(!bas)return;
+  const b=new Date(bas);const bit=new Date(b);bit.setDate(b.getDate()+6);
   const gunler=DB.load('gunler',{});
-  const entries=Object.values(gunler).filter(g=>{
-    const gd=new Date(g.tarih);return gd>=bas&&gd<=bit;
-  }).sort((a,b)=>a.tarih.localeCompare(b.tarih));
-
-  const totUretim=entries.reduce((s,g)=>s+g.uretim,0);
-  const totHedef=entries.reduce((s,g)=>s+(g.gunHedef||0),0);
-  const verimList=entries.filter(g=>g.verim);
-  const ortVerim=verimList.length>0?verimList.reduce((s,g)=>s+g.verim,0)/verimList.length:null;
-  const totDev=entries.reduce((s,g)=>s+(g.toplamDevamsiz||0),0);
-
-  document.getElementById('hft-kpi-hedef').textContent=fmt(totHedef,3)+' T';
-  document.getElementById('hft-kpi-gercek').textContent=fmt(totUretim,3)+' T';
-  document.getElementById('hft-kpi-verim').textContent=fmt(ortVerim,2);
-  document.getElementById('hft-kpi-devamsizlik').textContent=totDev;
-  const fark=totUretim-totHedef;
-  const fEl=document.getElementById('hft-kpi-fark');
-  fEl.textContent=(fark>=0?'+':'')+fmt(fark,3)+' T';
-  fEl.className='val '+(fark>=0?'c-green':'c-red');
-
-  document.getElementById('hft-tbody').innerHTML=entries.map(g=>`
-    <tr>
-      <td>${g.tarih}</td>
-      <td class="${g.gunHedef&&g.uretim>=g.gunHedef*0.97?'c-green':'c-red'}">${fmt(g.uretim,3)}</td>
-      <td>${g.gunHedef!==null?fmt(g.gunHedef,3):'—'}</td>
-      <td>${fmt(g.verim,2)}</td>
-      <td>${g.personelGercek||0}</td>
-      <td>${g.toplamDevamsiz||0}</td>
-      <td>${durum(g.uretim,g.gunHedef)}</td>
-    </tr>`).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--muted)">Bu hafta için veri yok</td></tr>';
+  const e=Object.values(gunler).filter(g=>{const gd=new Date(g.tarih);return gd>=b&&gd<=bit;}).sort((a,c)=>a.tarih.localeCompare(c.tarih));
+  const tU=e.reduce((s,g)=>s+g.uretim,0);
+  const tH=e.reduce((s,g)=>s+(g.gunHedef||0),0);
+  const vL=e.filter(g=>g.verim);
+  const vO=vL.length>0?vL.reduce((s,g)=>s+g.verim,0)/vL.length:null;
+  const tD=e.reduce((s,g)=>s+(g.toplamDevamsiz||0),0);
+  document.getElementById('hft-kpi-hedef').textContent=fmt(tH,3)+' T';
+  document.getElementById('hft-kpi-gercek').textContent=fmt(tU,3)+' T';
+  document.getElementById('hft-kpi-verim').textContent=fmt(vO,2);
+  document.getElementById('hft-kpi-devamsizlik').textContent=tD;
+  const fark=tU-tH;const fEl=document.getElementById('hft-kpi-fark');
+  fEl.textContent=(fark>=0?'+':'')+fmt(fark,3)+' T';fEl.className='val '+(fark>=0?'c-green':'c-red');
+  document.getElementById('hft-tbody').innerHTML=e.map(g=>`
+    <tr><td>${g.tarih}</td>
+    <td class="${g.gunHedef&&g.uretim>=g.gunHedef*0.97?'c-green':'c-red'}">${fmt(g.uretim,3)}</td>
+    <td>${g.gunHedef!==null?fmt(g.gunHedef,3):'—'}</td>
+    <td>${fmt(g.verim,2)}</td><td>${g.personelGercek||0}</td>
+    <td>${g.toplamDevamsiz||0}</td><td>${durum(g.uretim,g.gunHedef)}</td></tr>`).join('')
+    ||'<tr><td colspan="7" style="text-align:center;color:var(--muted)">Veri yok</td></tr>';
 }
 
-// ==================== AYLIK ====================
 function aylikInit(){
-  const selYil=document.getElementById('ay-yil');
-  if(selYil.options.length===0){
-    const yil=new Date().getFullYear();
-    for(let y=yil-1;y<=yil+1;y++){
-      const o=document.createElement('option');o.value=y;o.textContent=y;
-      if(y===yil)o.selected=true;
-      selYil.appendChild(o);
-    }
-  }
+  const s=document.getElementById('ay-yil');
+  if(s.options.length===0){const y=new Date().getFullYear();for(let i=y-2;i<=y+1;i++){const o=document.createElement('option');o.value=i;o.textContent=i;if(i===y)o.selected=true;s.appendChild(o);}}
   document.getElementById('ay-ay').value=new Date().getMonth();
   aylikGoster();
 }
-
 function aylikGoster(){
   const yil=parseInt(document.getElementById('ay-yil').value);
   const ay=parseInt(document.getElementById('ay-ay').value);
   const gunler=DB.load('gunler',{});
-  const entries=Object.values(gunler).filter(g=>{
-    const gd=new Date(g.tarih);return gd.getFullYear()===yil&&gd.getMonth()===ay;
-  }).sort((a,b)=>a.tarih.localeCompare(b.tarih));
-
-  const totUretim=entries.reduce((s,g)=>s+g.uretim,0);
-  const ayHedef=aylikHedefAl(yil,ay);
-  const verimList=entries.filter(g=>g.verim);
-  const ortVerim=verimList.length>0?verimList.reduce((s,g)=>s+g.verim,0)/verimList.length:null;
-  const totDev=entries.reduce((s,g)=>s+(g.toplamDevamsiz||0),0);
-  const totSaat=entries.reduce((s,g)=>s+((g.personelGercek||0)*(g.mesai||8)),0);
-  const fark=ayHedef!==null?(totUretim-ayHedef):null;
-
-  document.getElementById('ay-kpi-hedef').textContent=ayHedef!==null?fmt(ayHedef,3)+' T':'—';
-  document.getElementById('ay-kpi-gercek').textContent=fmt(totUretim,3)+' T';
-  document.getElementById('ay-kpi-verim').textContent=fmt(ortVerim,2);
-  document.getElementById('ay-kpi-devamsizlik').textContent=totDev;
-  document.getElementById('ay-kpi-calismaSaati').textContent=fmt(totSaat,0)+' sa';
+  const e=Object.values(gunler).filter(g=>{const gd=new Date(g.tarih);return gd.getFullYear()===yil&&gd.getMonth()===ay;}).sort((a,b)=>a.tarih.localeCompare(b.tarih));
+  const tU=e.reduce((s,g)=>s+g.uretim,0);
+  const aH=aylikHedefAl(yil,ay);
+  const vL=e.filter(g=>g.verim);
+  const vO=vL.length>0?vL.reduce((s,g)=>s+g.verim,0)/vL.length:null;
+  const tD=e.reduce((s,g)=>s+(g.toplamDevamsiz||0),0);
+  const tS=e.reduce((s,g)=>s+((g.personelGercek||0)*(g.mesai||8)),0);
+  const fark=aH!==null?(tU-aH):null;
+  document.getElementById('ay-kpi-hedef').textContent=aH!==null?fmt(aH,3)+' T':'—';
+  document.getElementById('ay-kpi-gercek').textContent=fmt(tU,3)+' T';
+  document.getElementById('ay-kpi-verim').textContent=fmt(vO,2);
+  document.getElementById('ay-kpi-devamsizlik').textContent=tD;
+  document.getElementById('ay-kpi-calismaSaati').textContent=fmt(tS,0)+' sa';
   const fEl=document.getElementById('ay-kpi-fark');
   fEl.textContent=fark!==null?(fark>=0?'+':'')+fmt(fark,3)+' T':'—';
-  fEl.className='val '+(fark===null?'':'fark'+(fark>=0?'c-green':'c-red'));
-
-  document.getElementById('ay-tbody').innerHTML=entries.map(g=>`
-    <tr>
-      <td>${g.tarih}</td>
-      <td class="${g.gunHedef&&g.uretim>=g.gunHedef*0.97?'c-green':'c-red'}">${fmt(g.uretim,3)}</td>
-      <td>${g.gunHedef!==null?fmt(g.gunHedef,3):'—'}</td>
-      <td>${fmt(g.verim,2)}</td>
-      <td>${g.personelGercek||0}</td>
-      <td>${g.toplamDevamsiz||0}</td>
-      <td class="note-cell" onclick="notGoster('${g.tarih}')" title="${g.not||''}">${g.not||'—'}</td>
-      <td><button class="del-btn" onclick="kayitSil('${g.tarih}')">🗑</button></td>
-    </tr>`).join('')||'<tr><td colspan="8" style="text-align:center;color:var(--muted)">Bu ay için veri yok</td></tr>';
+  fEl.className='val '+(fark!==null?(fark>=0?'c-green':'c-red'):'');
+  document.getElementById('ay-tbody').innerHTML=e.map(g=>`
+    <tr><td>${g.tarih}</td>
+    <td class="${g.gunHedef&&g.uretim>=g.gunHedef*0.97?'c-green':'c-red'}">${fmt(g.uretim,3)}</td>
+    <td>${g.gunHedef!==null?fmt(g.gunHedef,3):'—'}</td>
+    <td>${fmt(g.verim,2)}</td><td>${g.personelGercek||0}</td>
+    <td>${g.toplamDevamsiz||0}</td>
+    <td class="note-cell" onclick="notGoster('${g.tarih}')" title="${(g.not||'').replace(/'/g,'')}">${g.not||'—'}</td>
+    <td><button class="del-btn" onclick="kayitSil('${g.tarih}')">🗑</button></td></tr>`).join('')
+    ||'<tr><td colspan="8" style="text-align:center;color:var(--muted)">Veri yok</td></tr>';
 }
 
-function kayitSil(tarih){
-  if(!confirm(`${tarih} tarihli kayıt silinsin mi?`))return;
-  const gunler=DB.load('gunler',{});
-  delete gunler[tarih];
-  DB.save('gunler',gunler);
-  aylikGoster();anasayfaGuncelle();
+async function kayitSil(tarih){
+  if(!confirm(tarih+' tarihli kayıt silinsin mi?'))return;
+  const gunler=DB.load('gunler',{});delete gunler[tarih];
+  await DB.save('gunler',gunler);aylikGoster();anasayfaGuncelle();
 }
 
 function notGoster(tarih){
-  const gunler=DB.load('gunler',{});
-  const g=gunler[tarih];
-  if(!g)return;
+  const g=DB.load('gunler',{})[tarih];if(!g)return;
   document.getElementById('modal-icerik').innerHTML=`
-    <p style="font-size:0.82rem;color:var(--sub);margin-bottom:10px;">${tarih}</p>
-    <div class="kpi-grid" style="margin-bottom:12px">
+    <p style="font-size:0.8rem;color:var(--sub);margin-bottom:10px">${tarih}</p>
+    <div class="kpi-grid" style="margin-bottom:10px">
       <div class="kpi"><div class="val c-green">${fmt(g.uretim,3)}</div><div class="lbl">Üretim (T)</div></div>
       <div class="kpi"><div class="val c-yellow">${fmt(g.verim,2)}</div><div class="lbl">kg/A·Saat</div></div>
     </div>
-    <p style="font-size:0.82rem;color:var(--sub)">Personel: ${g.personelGercek||0} / ${g.personelPlan||0} &nbsp;|&nbsp; Mesai: ${g.mesai||8}sa</p>
-    <p style="font-size:0.82rem;color:var(--sub);margin-top:4px;">Dev: İstirahat:${g.istirahat||0} Mazeret:${g.mazeret||0} İzinsiz:${g.izinsiz||0}</p>
-    ${g.not?`<div class="warn-box" style="margin-top:10px;"><strong>📝 Not:</strong><br>${g.not}</div>`:'<p style="margin-top:10px;color:var(--muted);">Not yok</p>'}`;
+    <p style="font-size:0.8rem;color:var(--sub)">Personel: ${g.personelGercek||0}/${g.personelPlan||0} | Mesai: ${g.mesai||8}sa</p>
+    <p style="font-size:0.8rem;color:var(--sub);margin-top:4px">Devamsız — İstirahat:${g.istirahat||0} Mazeret:${g.mazeret||0} İzinsiz:${g.izinsiz||0}</p>
+    ${g.not?`<div class="warn-box" style="margin-top:10px"><strong>�� Not:</strong><br>${g.not}</div>`:'<p style="margin-top:10px;color:var(--muted)">Not yok</p>'}`;
   document.getElementById('not-modal').classList.add('open');
 }
-
 function modalKapat(){document.getElementById('not-modal').classList.remove('open');}
 document.getElementById('not-modal').addEventListener('click',function(e){if(e.target===this)modalKapat();});
-
-// ==================== AYARLAR ====================
+</script>
+<script>
 function ayarlarYukle(){
-  const yil=new Date().getFullYear();
-  const selYil=document.getElementById('ayar-yil');
-  const selGunYil=document.getElementById('ayar-gunYil');
-  if(selYil.options.length===0){
-    for(let y=yil-1;y<=yil+2;y++){
-      [selYil,selGunYil].forEach(s=>{
-        const o=document.createElement('option');o.value=y;o.textContent=y;
-        if(y===yil)o.selected=true;
-        s.appendChild(o);
-      });
-    }
-  }
+  ['ayar-yil','ayar-gunYil','ay-yil'].forEach(id=>{
+    const el=document.getElementById(id);if(!el||el.options.length>0)return;
+    const y=new Date().getFullYear();
+    for(let i=y-2;i<=y+2;i++){const o=document.createElement('option');o.value=i;o.textContent=i;if(i===y)o.selected=true;el.appendChild(o);}
+  });
   hedefYukle();gunSayisiYukle();
 }
-
 function hedefYukle(){
   const yil=document.getElementById('ayar-yil').value;
-  const hedefler=DB.load('hedefler',{});
-  const h=hedefler[yil]||{};
+  const h=DB.load('hedefler',{})[yil]||{};
   document.getElementById('ayar-yilHedef').value=h.yillik||'';
-  for(let i=0;i<12;i++){
-    document.getElementById(`h-${i}`).value=(h.aylar&&h.aylar[i]!=null)?h.aylar[i]:'';
-  }
+  for(let i=0;i<12;i++) document.getElementById(`h-${i}`).value=(h.aylar&&h.aylar[i]!=null)?h.aylar[i]:'';
 }
 document.getElementById('ayar-yil').addEventListener('change',hedefYukle);
 
-function hedefleriKaydet(){
+async function hedefleriKaydet(){
   const yil=document.getElementById('ayar-yil').value;
   const hedefler=DB.load('hedefler',{});
   const aylar={};
-  for(let i=0;i<12;i++){
-    const v=document.getElementById(`h-${i}`).value;
-    aylar[i]=v!==''?parseFloat(v):null;
-  }
+  for(let i=0;i<12;i++){const v=document.getElementById(`h-${i}`).value;aylar[i]=v!==''?parseFloat(v):null;}
   hedefler[yil]={yillik:parseFloat(document.getElementById('ayar-yilHedef').value)||null,aylar};
-  DB.save('hedefler',hedefler);
-  alert(`✅ ${yil} yılı hedefleri kaydedildi!`);
+  const ok=await DB.save('hedefler',hedefler);
+  alert(ok?`✅ ${yil} hedefleri kaydedildi!`:`⚠️ GitHub'a kaydedilemedi, yerel yedek alındı.`);
 }
 
 function gunSayisiYukle(){
   const yil=document.getElementById('ayar-gunYil').value;
-  const gs=DB.load('gunSayilari',{});
-  const g=gs[yil]||{};
-  for(let i=0;i<12;i++){
-    document.getElementById(`g-${i}`).value=(g[i]!=null)?g[i]:'';
-  }
+  const gs=DB.load('gunSayilari',{})[yil]||{};
+  for(let i=0;i<12;i++) document.getElementById(`g-${i}`).value=(gs[i]!=null)?gs[i]:'';
 }
 document.getElementById('ayar-gunYil').addEventListener('change',gunSayisiYukle);
 
-function gunSayisiKaydet(){
+async function gunSayisiKaydet(){
   const yil=document.getElementById('ayar-gunYil').value;
   const gs=DB.load('gunSayilari',{});
   const g={};
-  for(let i=0;i<12;i++){
-    const v=document.getElementById(`g-${i}`).value;
-    g[i]=v!==''?parseInt(v):null;
-  }
+  for(let i=0;i<12;i++){const v=document.getElementById(`g-${i}`).value;g[i]=v!==''?parseInt(v):null;}
   gs[yil]=g;
-  DB.save('gunSayilari',gs);
-  alert(`✅ ${yil} yılı çalışma gün sayıları kaydedildi!`);
+  const ok=await DB.save('gunSayilari',gs);
+  alert(ok?`✅ ${yil} gün sayıları kaydedildi!`:`⚠️ GitHub'a kaydedilemedi, yerel yedek alındı.`);
 }
 
 function veriIndir(){
-  const data={
-    gunler:DB.load('gunler',{}),
-    hedefler:DB.load('hedefler',{}),
-    gunSayilari:DB.load('gunSayilari',{})
-  };
+  const data={gunler:DB.load('gunler',{}),hedefler:DB.load('hedefler',{}),gunSayilari:DB.load('gunSayilari',{})};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`boya_uretim_${todayStr()}.json`;
-  a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`boya_uretim_${todayStr()}.json`;a.click();
 }
-
-function veriYukle(event){
-  const file=event.target.files[0];
-  if(!file)return;
+async function veriYukle(event){
+  const file=event.target.files[0];if(!file)return;
   const reader=new FileReader();
-  reader.onload=function(e){
+  reader.onload=async function(e){
     try{
       const data=JSON.parse(e.target.result);
-      if(data.gunler)DB.save('gunler',data.gunler);
-      if(data.hedefler)DB.save('hedefler',data.hedefler);
-      if(data.gunSayilari)DB.save('gunSayilari',data.gunSayilari);
-      alert('✅ Veriler başarıyla yüklendi!');
-      anasayfaGuncelle();
-    }catch(err){alert('❌ Geçersiz JSON dosyası!');}
+      if(data.gunler)await DB.save('gunler',data.gunler);
+      if(data.hedefler)await DB.save('hedefler',data.hedefler);
+      if(data.gunSayilari)await DB.save('gunSayilari',data.gunSayilari);
+      alert('✅ Veriler yüklendi!');anasayfaGuncelle();
+    }catch(err){alert('❌ Geçersiz dosya!');}
   };
   reader.readAsText(file);
 }
-
-function veriSifirla(){
-  if(!confirm('⚠️ TÜM VERİLER SİLİNECEK! Emin misiniz?'))return;
-  if(!confirm('Son kez onaylıyor musunuz? Bu işlem geri alınamaz!'))return;
+async function veriSifirla(){
+  if(!confirm('TÜM VERİLER SİLİNECEK! Emin misiniz?'))return;
+  if(!confirm('Son onay: Bu işlem geri alınamaz!'))return;
+  DB._data={gunler:{},hedefler:{},gunSayilari:{}};
   ['gunler','hedefler','gunSayilari'].forEach(k=>localStorage.removeItem('boya_'+k));
+  await GH.writeAll(DB._data);
   alert('✅ Tüm veriler silindi.');location.reload();
 }
 
 // ==================== BAŞLANGIÇ ====================
-(function init(){
+(async function init(){
   document.getElementById('headerDate').textContent=
     new Date().toLocaleDateString('tr-TR',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-
-  // Ayar sayfası yıl seçimleri başlat
-  const yil=new Date().getFullYear();
-  ['ayar-yil','ayar-gunYil','ay-yil'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el&&el.options.length===0){
-      for(let y=yil-1;y<=yil+2;y++){
-        const o=document.createElement('option');o.value=y;o.textContent=y;
-        if(y===yil)o.selected=true;
-        el.appendChild(o);
-      }
-    }
-  });
-
+  await DB.init();
   anasayfaGuncelle();
 })();
 </script>
 </body>
 </html>
+<script>
+// ==================== TAKVİM ====================
+let calYil = new Date().getFullYear();
+let calAy  = new Date().getMonth();
+
+function takvimInit() {
+  calYil = new Date().getFullYear();
+  calAy  = new Date().getMonth();
+  takvimCiz();
+}
+
+function takvimAyDegistir(delta) {
+  calAy += delta;
+  if (calAy < 0)  { calAy = 11; calYil--; }
+  if (calAy > 11) { calAy = 0;  calYil++; }
+  takvimCiz();
+}
+
+function takvimCiz() {
+  const AYLAR = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  document.getElementById('cal-baslik').textContent = AYLAR[calAy] + ' ' + calYil;
+
+  const gunler   = DB.load('gunler', {});
+  const ayHedef  = aylikHedefAl(calYil, calAy);
+  const gunSayisi = parseInt(DB.load('gunSayilari', {})?.[calYil]?.[calAy] ?? 22);
+  const bugun    = new Date(); bugun.setHours(0,0,0,0);
+  const todayKey = dateStr(bugun);
+  const pad      = n => String(n).padStart(2,'0');
+
+  // Ayın 1. günü hangi haftanın günü? (Pazartesi=0)
+  const ilkGun   = new Date(calYil, calAy, 1);
+  const sonGun   = new Date(calYil, calAy + 1, 0);
+  const baslangicOffset = (ilkGun.getDay() + 6) % 7; // Pzt=0
+
+  // Ay verileri
+  const ayEntries = Object.values(gunler).filter(g => {
+    const d = new Date(g.tarih);
+    return d.getFullYear() === calYil && d.getMonth() === calAy;
+  });
+
+  const cumUretim  = ayEntries.reduce((s, g) => s + (g.uretim || 0), 0);
+  const vList      = ayEntries.filter(g => g.verim && g.verim > 0);
+  const cumVerim   = vList.length > 0 ? vList.reduce((s, g) => s + g.verim, 0) / vList.length : null;
+  const calisilan  = ayEntries.filter(g => g.uretim > 0).length;
+
+  // Kalan iş günü: toplam planlanan - bugüne kadar geçen iş günleri
+  const buAy = calYil === bugun.getFullYear() && calAy === bugun.getMonth();
+  let kalanGun = 0;
+  if (buAy) {
+    // Bugünden ay sonuna kadar hafta içi + cumartesi sayısı (takvimden)
+    for (let d = bugun.getDate(); d <= sonGun.getDate(); d++) {
+      const gün = new Date(calYil, calAy, d).getDay();
+      if (gün !== 0) kalanGun++; // Pazar hariç
+    }
+  } else if (new Date(calYil, calAy, 1) > bugun) {
+    kalanGun = gunSayisi;
+  }
+
+  const kalan     = ayHedef !== null ? Math.max(0, ayHedef - cumUretim) : null;
+  const gereken   = (kalan !== null && kalanGun > 0) ? kalan / kalanGun : null;
+
+  // KPI güncelle
+  document.getElementById('cal-kpi-uretim').textContent  = fmt(cumUretim, 3) + ' T';
+  document.getElementById('cal-kpi-verim').textContent   = fmt(cumVerim, 2);
+  document.getElementById('cal-kpi-hedef').textContent   = ayHedef !== null ? fmt(ayHedef, 3) + ' T' : '—';
+  document.getElementById('cal-kpi-calisilan').textContent = calisilan + ' gün';
+  document.getElementById('cal-kpi-kalan').textContent   = buAy ? kalanGun + ' gün' : '—';
+  document.getElementById('cal-kpi-gereken').textContent = gereken !== null ? fmt(gereken, 1) + ' T' : '—';
+
+  const pct = ayHedef && ayHedef > 0 ? Math.min(100, cumUretim / ayHedef * 100) : 0;
+  const fill = document.getElementById('cal-prog-fill');
+  fill.style.width = pct + '%';
+  fill.style.background = pct >= 97 ? '#22c55e' : pct >= 70 ? '#eab308' : '#ef4444';
+  document.getElementById('cal-prog-pct').textContent = pct.toFixed(1) + '%';
+  document.getElementById('cal-prog-lbl').textContent  = AYLAR[calAy] + ' ' + calYil;
+
+  // Günlük hedef (ay hedef / gün sayısı)
+  const gunlukHdf = ayHedef && gunSayisi > 0 ? ayHedef / gunSayisi : null;
+
+  // Takvim hücrelerini oluştur
+  const body = document.getElementById('cal-body');
+  body.innerHTML = '';
+
+  // Başlangıç boşlukları
+  for (let i = 0; i < baslangicOffset; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    body.appendChild(el);
+  }
+
+  for (let gun = 1; gun <= sonGun.getDate(); gun++) {
+    const tarih = `${calYil}-${pad(calAy + 1)}-${pad(gun)}`;
+    const haftaGunu = new Date(calYil, calAy, gun).getDay(); // 0=Paz
+    const kayit = gunler[tarih];
+    const isToday = tarih === todayKey;
+
+    const el = document.createElement('div');
+    let cls = 'cal-day';
+    if (isToday) cls += ' today';
+
+    if (kayit && kayit.uretim > 0) {
+      if (gunlukHdf) {
+        const oran = kayit.uretim / gunlukHdf;
+        cls += oran >= 0.97 ? ' good' : oran >= 0.85 ? ' mid' : ' bad';
+      } else {
+        cls += ' has-data';
+      }
+    }
+    if (haftaGunu === 0) cls += ' pazar'; // Pazar
+    el.className = cls;
+
+    // Gün numarası
+    const dnEl = document.createElement('div');
+    dnEl.className = 'dn';
+    dnEl.textContent = gun;
+    if (haftaGunu === 0 || haftaGunu === 6) dnEl.style.color = '#f87171';
+    el.appendChild(dnEl);
+
+    if (kayit && kayit.uretim > 0) {
+      const duEl = document.createElement('div');
+      duEl.className = 'du';
+      duEl.textContent = fmt(kayit.uretim, 1) + 'T';
+      el.appendChild(duEl);
+
+      if (kayit.verim) {
+        const dvEl = document.createElement('div');
+        dvEl.className = 'dv';
+        dvEl.textContent = fmt(kayit.verim, 0) + ' k/A';
+        el.appendChild(dvEl);
+      }
+    }
+
+    // Tıklanınca detay
+    if (kayit) {
+      el.onclick = () => notGoster(tarih);
+    } else {
+      el.onclick = () => {
+        // Tarih seçip gün girişine git
+        document.getElementById('gun-tarih').value = tarih;
+        showPage('gunluk');
+      };
+    }
+
+    body.appendChild(el);
+  }
+
+  // Sona boşluk ekle (7'nin katı olacak şekilde)
+  const toplamHucre = baslangicOffset + sonGun.getDate();
+  const kalanBosluk = toplamHucre % 7 === 0 ? 0 : 7 - (toplamHucre % 7);
+  for (let i = 0; i < kalanBosluk; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    body.appendChild(el);
+  }
+}
+</script>
+</body></html>
+<script>
+function tokenKaydet(){
+  const t=document.getElementById('gh-token-input').value.trim();
+  if(!t){document.getElementById('token-msg').innerHTML='<span style="color:#ef4444">Token boş olamaz!</span>';return;}
+  localStorage.setItem('gh_token',t);
+  GH.token=t;
+  document.getElementById('token-msg').innerHTML='<span style="color:#22c55e">✅ Token kaydedildi.</span>';
+  document.getElementById('gh-token-input').value='';
+}
+</script>
