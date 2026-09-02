@@ -106,6 +106,8 @@ tr:hover td{background:#1a2740;}
   <button class="bnav-item" onclick="showPage('takvim')"><span class="icon">📆</span>Takvim</button>
   <button class="bnav-item" onclick="showPage('aylik')"><span class="icon">📊</span>Aylık</button>
   <button class="bnav-item" onclick="showPage('ayarlar')"><span class="icon">⚙️</span>Ayarlar</button>
+  <button class="bnav-item" onclick="showPage('dynomill')"><span class="icon">🔩</span>Dynomill</button>
+  <button class="bnav-item" onclick="showPage('tanklar')"><span class="icon">🛢</span>Tanklar</button>
 </nav>
 
 <!-- ===================== ANASAYFA ===================== -->
@@ -426,6 +428,53 @@ tr:hover td{background:#1a2740;}
     </div>
   </div>
 </div>
+<!-- DYNOMILL SAYFASI -->
+<div id="page-dynomill" class="page">
+  <div class="card">
+    <div class="card-title">🔩 Dynomill Makine - Ürün Eşleşmeleri</div>
+    <div class="info-box">Makineye tıklayarak ürün, boncuk miktarı ve renk bilgilerini düzenleyebilirsiniz.</div>
+    <div id="dynomill-listesi"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">⚙️ Ekipman Özellikleri</div>
+    <div class="table-wrap">
+      <table id="ekipman-tablo">
+        <thead><tr><th>Makine</th><th>Motor (kW)</th><th>Mil Dev.</th><th>Boncuk (kg)</th><th>Hacim (L)</th><th>Doluluk %</th></tr></thead>
+        <tbody id="ekipman-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- TANKLAR SAYFASI -->
+<div id="page-tanklar" class="page">
+  <div class="card">
+    <div class="card-title">🏭 İmalat Tankları</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tank No</th><th>Çap/En (cm)</th><th>Yükseklik (cm)</th><th>Hacim (m³)</th><th>Tonaj</th><th>Kullanım</th></tr></thead>
+        <tbody id="imalat-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🎨 Renk Tankları</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tank No</th><th>En (cm)</th><th>Boy (cm)</th><th>Yük. (cm)</th><th>Hacim (m³)</th><th>Tonaj</th></tr></thead>
+        <tbody id="renk-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">💧 Sıvı Kalsit Stok Tankları</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tank No</th><th>Çap (cm)</th><th>Yükseklik (cm)</th><th>Hacim (m³)</th><th>Tonaj</th></tr></thead>
+        <tbody id="kalsit-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
 <!-- NOT MODAL -->
 <div class="modal-overlay" id="not-modal">
   <div class="modal">
@@ -598,6 +647,8 @@ function showPage(id){
   if(id==='haftalik')haftaInit();
   if(id==='takvim')takvimInit();
   if(id==='aylik')aylikInit();
+  if(id==='dynomill')dynomillYukle();
+  if(id==='tanklar')tanklarYukle();
   if(id==='ayarlar')ayarlarYukle();
 }
 
@@ -1048,5 +1099,217 @@ function tokenKaydet(){
   GH.token=t;
   document.getElementById('token-msg').innerHTML='<span style="color:#22c55e">✅ Token kaydedildi.</span>';
   document.getElementById('gh-token-input').value='';
+}
+</script>
+<script>
+// ==================== DYNOMILL VERİLERİ ====================
+const DYNOMILL_VARSAYILAN = [
+  {makine:'D-1', urunler:[
+    {kod:'854-3000',renk:'Yeşil',boncukKg:110,boncukEbat:'1.8-2.0',toplamKg:350},
+    {kod:'854-3001',renk:'Lc Yeşil',boncukKg:110,boncukEbat:'1.8-2.0',toplamKg:300},
+    {kod:'854-5001',renk:'Lc Kırmızı Vıole',boncukKg:110,boncukEbat:'1.8-2.0',toplamKg:333},
+    {kod:'854-5100',renk:'Vıole',boncukKg:110,boncukEbat:'1.8-2.0',toplamKg:400},
+    {kod:'854-5101',renk:'Lc Vıole',boncukKg:110,boncukEbat:'1.8-2.0',toplamKg:400},
+    {kod:'854-6000',renk:'Koyu Mavi',boncukKg:110,boncukEbat:'1.8-2.0',toplamKg:395},
+    {kod:'854-6001',renk:'Lc Mavi',boncukKg:110,boncukEbat:'1.8-2.0',toplamKg:350}
+  ]},
+  {makine:'D-2', urunler:[
+    {kod:'599-SERİ SİYAH / 594-SERİ SİYAH',renk:'Profil Boyası',boncukKg:100,boncukEbat:'1.4-1.6 Zirkonyum Silikat',toplamKg:0}
+  ]},
+  {makine:'D-8', urunler:[
+    {kod:'594-SERİ KIRMIZI',renk:'Profil Boyası',boncukKg:90,boncukEbat:'1.8-2.0',toplamKg:0}
+  ]},
+  {makine:'D-9', urunler:[
+    {kod:'854-2250',renk:'Turuncu',boncukKg:100,boncukEbat:'1.8-2.0',toplamKg:0},
+    {kod:'854-4050',renk:'Nar Çiçeği',boncukKg:100,boncukEbat:'1.8-2.0',toplamKg:0},
+    {kod:'854-4100',renk:'İç Kırmızı',boncukKg:100,boncukEbat:'1.8-2.0',toplamKg:0},
+    {kod:'854-4150',renk:'Dış Kırmızı',boncukKg:100,boncukEbat:'1.8-2.0',toplamKg:0},
+    {kod:'854-5050',renk:'Pembe',boncukKg:100,boncukEbat:'1.8-2.0',toplamKg:0}
+  ]},
+  {makine:'D-10', urunler:[
+    {kod:'854-1000',renk:'Beyaz Pasta',boncukKg:90,boncukEbat:'1.8-2.0',toplamKg:1045},
+    {kod:'854-1002',renk:'Beyaz Kalsit %60',boncukKg:90,boncukEbat:'1.8-2.0',toplamKg:0}
+  ]},
+  {makine:'D-11', urunler:[
+    {kod:'854-3900',renk:'Kobalt Yeşil',boncukKg:80,boncukEbat:'1.8-2.0',toplamKg:375},
+    {kod:'854-3950',renk:'Promoksit Yeşil',boncukKg:80,boncukEbat:'1.8-2.0',toplamKg:385},
+    {kod:'854-6600',renk:'İnorganik Mavi',boncukKg:80,boncukEbat:'1.8-2.0',toplamKg:417},
+    {kod:'854-6500',renk:'Kobalt Mavi',boncukKg:80,boncukEbat:'1.8-2.0',toplamKg:409}
+  ]},
+  {makine:'D-12', urunler:[
+    {kod:'594-SERİ KIRMIZI',renk:'Profil Boyası',boncukKg:90,boncukEbat:'1.8-2.0',toplamKg:1500}
+  ]},
+  {makine:'D-13', urunler:[
+    {kod:'854-4250',renk:'Oksit Kırmızı',boncukKg:90,boncukEbat:'1.8-2.0',toplamKg:375},
+    {kod:'854-2900',renk:'Kahverengi',boncukKg:90,boncukEbat:'1.8-2.0',toplamKg:125},
+    {kod:'854-4200',renk:'Oksit Kırmızı',boncukKg:90,boncukEbat:'1.8-2.0',toplamKg:735}
+  ]},
+  {makine:'D-14', urunler:[
+    {kod:'854-2300',renk:'Oksit Sarı',boncukKg:90,boncukEbat:'1.8-2.0',toplamKg:4900}
+  ]},
+  {makine:'D-15', urunler:[
+    {kod:'854-2100',renk:'İç Cephe Sarı Pasta',boncukKg:90,boncukEbat:'1.8-2.0',toplamKg:375},
+    {kod:'854-2150',renk:'Dış Cephe Sarı',boncukKg:90,boncukEbat:'1.8-2.0',toplamKg:400}
+  ]},
+  {makine:'Netzsch', urunler:[
+    {kod:'854-9000',renk:'Su Bazlı Siyah Pasta',boncukKg:77.5,boncukEbat:'0.9-1.1',toplamKg:0},
+    {kod:'854-9100',renk:'Su Bazlı Demiroksit Siyah',boncukKg:77.5,boncukEbat:'0.9-1.1',toplamKg:0}
+  ]}
+];
+
+const EKIPMAN = [
+  {makine:'D-10',motor:44,milDevir:740,boncuk:90,hacim:35,doluluk:59},
+  {makine:'D-12',motor:44,milDevir:740,boncuk:90,hacim:35,doluluk:59},
+  {makine:'D-13',motor:44,milDevir:740,boncuk:90,hacim:35,doluluk:59},
+  {makine:'D-14',motor:44,milDevir:740,boncuk:90,hacim:35,doluluk:59},
+  {makine:'D-8',motor:44,milDevir:740,boncuk:100,hacim:39,doluluk:65},
+  {makine:'D-15',motor:44,milDevir:740,boncuk:90,hacim:35,doluluk:59},
+  {makine:'D-1',motor:44,milDevir:740,boncuk:110,hacim:43,doluluk:72},
+  {makine:'D-11',motor:44,milDevir:740,boncuk:80,hacim:31,doluluk:52},
+  {makine:'D-9',motor:44,milDevir:740,boncuk:100,hacim:39,doluluk:65},
+  {makine:'D-2',motor:44,milDevir:740,boncuk:90,hacim:35,doluluk:59},
+  {makine:'Netzsch',motor:30,milDevir:null,boncuk:78,hacim:20,doluluk:80}
+];
+
+function dynomillVeriAl() {
+  const kayit = localStorage.getItem('dynomill_data');
+  return kayit ? JSON.parse(kayit) : JSON.parse(JSON.stringify(DYNOMILL_VARSAYILAN));
+}
+function dynomillVeriKaydet(data) {
+  localStorage.setItem('dynomill_data', JSON.stringify(data));
+}
+
+function dynomillYukle() {
+  const data = dynomillVeriAl();
+  const el = document.getElementById('dynomill-listesi');
+  el.innerHTML = data.map((m, mi) => `
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:0.95rem;font-weight:700;color:var(--blue)">🔩 ${m.makine}</span>
+        <button class="btn-success" style="width:auto;padding:6px 14px;margin:0;font-size:0.78rem" onclick="urunEkle(${mi})">+ Ürün Ekle</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Ürün Kodu</th><th>Renk</th><th>Boncuk (kg)</th><th>Ebat (mm)</th><th>Pasta (kg)</th><th></th></tr></thead>
+          <tbody>
+            ${m.urunler.map((u, ui) => `
+              <tr>
+                <td><input style="min-width:120px" value="${u.kod}" onchange="urunGuncelle(${mi},${ui},'kod',this.value)"></td>
+                <td><input style="min-width:100px" value="${u.renk}" onchange="urunGuncelle(${mi},${ui},'renk',this.value)"></td>
+                <td><input type="number" style="width:70px" value="${u.boncukKg}" onchange="urunGuncelle(${mi},${ui},'boncukKg',parseFloat(this.value))"></td>
+                <td><input style="width:80px" value="${u.boncukEbat}" onchange="urunGuncelle(${mi},${ui},'boncukEbat',this.value)"></td>
+                <td><input type="number" style="width:70px" value="${u.toplamKg||''}" placeholder="—" onchange="urunGuncelle(${mi},${ui},'toplamKg',parseFloat(this.value)||0)"></td>
+                <td><button class="del-btn" onclick="urunSil(${mi},${ui})">🗑</button></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`).join('');
+
+  // Ekipman tablosu
+  document.getElementById('ekipman-tbody').innerHTML = EKIPMAN.map(e => `
+    <tr>
+      <td><strong>${e.makine}</strong></td>
+      <td>${e.motor} kW</td>
+      <td>${e.milDevir ? e.milDevir+' d/dk' : 'Ayarlı'}</td>
+      <td>${e.boncuk} kg</td>
+      <td>${e.hacim} L</td>
+      <td><span class="badge ${e.doluluk>=70?'br':e.doluluk>=60?'by':'bg'}">${e.doluluk}%</span></td>
+    </tr>`).join('');
+}
+
+function urunGuncelle(mi, ui, alan, deger) {
+  const data = dynomillVeriAl();
+  data[mi].urunler[ui][alan] = deger;
+  dynomillVeriKaydet(data);
+}
+
+function urunEkle(mi) {
+  const data = dynomillVeriAl();
+  data[mi].urunler.push({kod:'Yeni Ürün',renk:'',boncukKg:90,boncukEbat:'1.8-2.0',toplamKg:0});
+  dynomillVeriKaydet(data);
+  dynomillYukle();
+}
+
+function urunSil(mi, ui) {
+  if (!confirm('Bu ürün silinsin mi?')) return;
+  const data = dynomillVeriAl();
+  data[mi].urunler.splice(ui, 1);
+  dynomillVeriKaydet(data);
+  dynomillYukle();
+}
+
+// ==================== TANKLAR ====================
+const IMALAT_TANKLARI = [
+  {no:'233/turbo',cap:196,yukseklik:300,hacim:9,tonaj:10},
+  {no:'230',cap:160,yukseklik:185,hacim:4,tonaj:5},
+  {no:'231',cap:160,yukseklik:185,hacim:4,tonaj:5},
+  {no:'232',cap:160,yukseklik:185,hacim:4,tonaj:5},
+  {no:'83',cap:160,yukseklik:210,hacim:4,tonaj:5},
+  {no:'84',cap:160,yukseklik:210,hacim:4,tonaj:5},
+  {no:'85',cap:160,yukseklik:210,hacim:4,tonaj:5},
+  {no:'86',cap:190,yukseklik:190,hacim:5,tonaj:5},
+  {no:'87',cap:190,yukseklik:190,hacim:5,tonaj:5},
+  {no:'88',cap:220,yukseklik:220,hacim:6,tonaj:5},
+  {no:'89',cap:190,yukseklik:180,hacim:5,tonaj:5},
+  {no:'90',cap:190,yukseklik:180,hacim:5,tonaj:5},
+  {no:'91',cap:150,yukseklik:150,hacim:3,tonaj:2},
+  {no:'96',cap:160,yukseklik:200,hacim:4,tonaj:5},
+  {no:'97',cap:160,yukseklik:200,hacim:4,tonaj:5},
+  {no:'98',cap:160,yukseklik:200,hacim:4,tonaj:5},
+  {no:'234',cap:230,yukseklik:245,hacim:10,tonaj:10},
+  {no:'235',cap:230,yukseklik:245,hacim:10,tonaj:10},
+  {no:'236',cap:230,yukseklik:245,hacim:10,tonaj:10},
+  {no:'237',cap:230,yukseklik:245,hacim:10,tonaj:10}
+];
+
+const RENK_TANKLARI = [
+  {no:'3-12',en:168,boy:168,yuk:188,hacim:5,tonaj:5,adet:10},
+  {no:'15-18',en:118,boy:118,yuk:150,hacim:2,tonaj:2,adet:4},
+  {no:'19,23',en:128,boy:128,yuk:185,hacim:3,tonaj:2,adet:2},
+  {no:'170-173',en:193,boy:193,yuk:250,hacim:9,tonaj:10,adet:4},
+  {no:'174-176',en:150,boy:150,yuk:180,hacim:4,tonaj:5,adet:3},
+  {no:'182-186',en:160,boy:160,yuk:155,hacim:4,tonaj:5,adet:5},
+  {no:'187-192',en:168,boy:168,yuk:185,hacim:5,tonaj:5,adet:6},
+  {no:'193-196',en:199,boy:199,yuk:253,hacim:10,tonaj:10,adet:4},
+  {no:'197-200',en:128,boy:128,yuk:190,hacim:3,tonaj:2,adet:4},
+  {no:'201-203',en:108,boy:108,yuk:190,hacim:2,tonaj:2,adet:3},
+  {no:'204-205',en:199,boy:199,yuk:253,hacim:10,tonaj:10,adet:2},
+  {no:'206-211',en:168,boy:168,yuk:175,hacim:5,tonaj:5,adet:6},
+  {no:'256-259',en:199,boy:199,yuk:253,hacim:10,tonaj:10,adet:4},
+  {no:'260-262',en:198,boy:198,yuk:290,hacim:11,tonaj:10,adet:3},
+  {no:'263-265',en:198,boy:198,yuk:253,hacim:10,tonaj:10,adet:3},
+  {no:'400-409',cap:260,yukseklik:200,hacim:11,tonaj:10,adet:10},
+  {no:'436-441',cap:140,yukseklik:217,hacim:3,tonaj:2,adet:6},
+  {no:'444',cap:250,yukseklik:400,hacim:20,tonaj:20,adet:1},
+  {no:'445',cap:208,yukseklik:345,hacim:12,tonaj:10,adet:1},
+  {no:'446',cap:160,yukseklik:275,hacim:6,tonaj:5,adet:1},
+  {no:'101-104',cap:160,yukseklik:270,hacim:5,tonaj:5,adet:4}
+];
+
+const KALSIT_TANKLARI = [
+  {no:'435',cap:288,yukseklik:460,hacim:30,tonaj:30},
+  {no:'442',cap:250,yukseklik:400,hacim:20,tonaj:20},
+  {no:'443',cap:250,yukseklik:400,hacim:20,tonaj:20},
+  {no:'219-222',cap:180,yukseklik:250,hacim:6,tonaj:5,adet:4}
+];
+
+function tanklarYukle() {
+  document.getElementById('imalat-tbody').innerHTML = IMALAT_TANKLARI.map(t =>
+    `<tr><td><strong>${t.no}</strong></td><td>${t.cap}</td><td>${t.yukseklik}</td>
+     <td class="c-blue">${t.hacim} m³</td><td>${t.tonaj} T</td><td><span class="badge bb">İmalat</span></td></tr>`
+  ).join('');
+
+  document.getElementById('renk-tbody').innerHTML = RENK_TANKLARI.map(t =>
+    `<tr><td><strong>${t.no}</strong>${t.adet?` <span class="badge bg">${t.adet} adet</span>`:''}</td>
+     <td>${t.en||t.cap||'—'}</td><td>${t.boy||'—'}</td><td>${t.yuk||t.yukseklik||'—'}</td>
+     <td class="c-blue">${t.hacim} m³</td><td>${t.tonaj} T</td></tr>`
+  ).join('');
+
+  document.getElementById('kalsit-tbody').innerHTML = KALSIT_TANKLARI.map(t =>
+    `<tr><td><strong>${t.no}</strong>${t.adet?` <span class="badge bb">${t.adet} adet</span>`:''}</td>
+     <td>${t.cap}</td><td>${t.yukseklik}</td>
+     <td class="c-blue">${t.hacim} m³</td><td>${t.tonaj} T</td></tr>`
+  ).join('');
 }
 </script>
