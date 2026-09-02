@@ -484,8 +484,6 @@ tr:hover td{background:#1a2740;}
   </div>
 </div>
 <script>
-// ==================== VERİ KATMANI ====================
-<script>
 // ==================== GITHUB API VERİ KATMANI ====================
 const GH = {
   token: localStorage.getItem('gh_token') || '',
@@ -932,8 +930,6 @@ async function veriSifirla(){
   anasayfaGuncelle();
 })();
 </script>
-</body>
-</html>
 <script>
 // ==================== TAKVİM ====================
 let calYil = new Date().getFullYear();
@@ -1090,7 +1086,6 @@ function takvimCiz() {
   }
 }
 </script>
-</body></html>
 <script>
 function tokenKaydet(){
   const t=document.getElementById('gh-token-input').value.trim();
@@ -1100,8 +1095,6 @@ function tokenKaydet(){
   document.getElementById('token-msg').innerHTML='<span style="color:#22c55e">✅ Token kaydedildi.</span>';
   document.getElementById('gh-token-input').value='';
 }
-</script>
-<script>
 // ==================== DYNOMILL VERİLERİ ====================
 const DYNOMILL_VARSAYILAN = [
   {makine:'D-1', urunler:[
@@ -1312,3 +1305,5 @@ function tanklarYukle() {
   ).join('');
 }
 </script>
+</body>
+</html>
