@@ -3700,10 +3700,10 @@
       "renk": "",
       "miktar": 2600,
       "not": "",
-      "durum": "dynomil",
+      "durum": "kalite",
       "tarihOlustur": "2026-09-03",
       "tarihGuncelle": "2026-09-03",
-      "ts": 1788428346850,
+      "ts": 1788428353514,
       "gecmis": [
         {
           "durum": "bekleyen",
@@ -3717,6 +3717,13 @@
           "saat": "12:39",
           "not": "",
           "makine": "D-14"
+        },
+        {
+          "durum": "kalite",
+          "tarih": "2026-09-03",
+          "saat": "12:39",
+          "not": "",
+          "makine": ""
         }
       ],
       "makine": "D-14"
