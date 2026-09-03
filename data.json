@@ -3085,6 +3085,26 @@
           "not": "Listeye eklendi"
         }
       ]
+    },
+    {
+      "id": "1788427342275",
+      "kod": "854-5101",
+      "parti": "10089061",
+      "renk": "",
+      "miktar": 400,
+      "not": "5100 bekliyor",
+      "durum": "bekleyen",
+      "tarihOlustur": "2026-09-03",
+      "tarihGuncelle": "2026-09-03",
+      "ts": 1788427342275,
+      "gecmis": [
+        {
+          "durum": "bekleyen",
+          "tarih": "2026-09-03",
+          "saat": "12:22",
+          "not": "Listeye eklendi"
+        }
+      ]
     }
   ]
 }
