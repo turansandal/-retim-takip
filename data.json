@@ -3064,5 +3064,27 @@
       "10": 21,
       "11": 21
     }
-  }
+  },
+  "pastalar": [
+    {
+      "id": "1788427302969",
+      "kod": "854-3900",
+      "parti": "10088999",
+      "renk": "",
+      "miktar": 418,
+      "not": "",
+      "durum": "bekleyen",
+      "tarihOlustur": "2026-09-03",
+      "tarihGuncelle": "2026-09-03",
+      "ts": 1788427302969,
+      "gecmis": [
+        {
+          "durum": "bekleyen",
+          "tarih": "2026-09-03",
+          "saat": "12:21",
+          "not": "Listeye eklendi"
+        }
+      ]
+    }
+  ]
 }
