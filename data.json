@@ -3141,10 +3141,10 @@
       "renk": "",
       "miktar": 384,
       "not": "Paçal bekliyor.",
-      "durum": "kalite",
+      "durum": "uygunsuz",
       "tarihOlustur": "2026-09-03",
       "tarihGuncelle": "2026-09-03",
-      "ts": 1788427527711,
+      "ts": 1788427535227,
       "gecmis": [
         {
           "durum": "bekleyen",
@@ -3161,6 +3161,20 @@
         },
         {
           "durum": "kalite",
+          "tarih": "2026-09-03",
+          "saat": "12:25",
+          "not": "",
+          "makine": ""
+        },
+        {
+          "durum": "kalite",
+          "tarih": "2026-09-03",
+          "saat": "12:25",
+          "not": "",
+          "makine": ""
+        },
+        {
+          "durum": "uygunsuz",
           "tarih": "2026-09-03",
           "saat": "12:25",
           "not": "",
