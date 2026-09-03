@@ -3700,18 +3700,26 @@
       "renk": "",
       "miktar": 2600,
       "not": "",
-      "durum": "bekleyen",
+      "durum": "dynomil",
       "tarihOlustur": "2026-09-03",
       "tarihGuncelle": "2026-09-03",
-      "ts": 1788428342473,
+      "ts": 1788428346850,
       "gecmis": [
         {
           "durum": "bekleyen",
           "tarih": "2026-09-03",
           "saat": "12:39",
           "not": "Listeye eklendi"
+        },
+        {
+          "durum": "dynomil",
+          "tarih": "2026-09-03",
+          "saat": "12:39",
+          "not": "",
+          "makine": "D-14"
         }
-      ]
+      ],
+      "makine": "D-14"
     }
   ]
 }
