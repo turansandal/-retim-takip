@@ -3490,10 +3490,10 @@
       "renk": "",
       "miktar": 350,
       "not": "",
-      "durum": "uygunsuz",
+      "durum": "uretimde",
       "tarihOlustur": "2026-09-03",
       "tarihGuncelle": "2026-09-03",
-      "ts": 1788427968268,
+      "ts": 1788427981516,
       "gecmis": [
         {
           "durum": "bekleyen",
@@ -3520,6 +3520,13 @@
           "tarih": "2026-09-03",
           "saat": "12:32",
           "not": "",
+          "makine": ""
+        },
+        {
+          "durum": "uretimde",
+          "tarih": "2026-09-03",
+          "saat": "12:33",
+          "not": "Kazanda",
           "makine": ""
         }
       ],
