@@ -2992,6 +2992,24 @@
       "gunHedef": 222.22222222222223,
       "verim": 335.23809523809524,
       "toplamDevamsiz": 0
+    },
+    "2026-09-01": {
+      "tarih": "2026-09-01",
+      "plan": 0,
+      "sarkan": 0,
+      "ilave": 0,
+      "uretim": 161,
+      "personelPlan": 0,
+      "personelGercek": 70,
+      "mesai": 7.5,
+      "istirahat": 0,
+      "mazeret": 0,
+      "izinsiz": 0,
+      "not": "",
+      "ts": 1788427081212,
+      "gunHedef": 189.3939393939394,
+      "verim": 306.6666666666667,
+      "toplamDevamsiz": 0
     }
   },
   "hedefler": {
