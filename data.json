@@ -3490,18 +3490,26 @@
       "renk": "",
       "miktar": 350,
       "not": "",
-      "durum": "bekleyen",
+      "durum": "dynomil",
       "tarihOlustur": "2026-09-03",
       "tarihGuncelle": "2026-09-03",
-      "ts": 1788427951612,
+      "ts": 1788427960425,
       "gecmis": [
         {
           "durum": "bekleyen",
           "tarih": "2026-09-03",
           "saat": "12:32",
           "not": "Listeye eklendi"
+        },
+        {
+          "durum": "dynomil",
+          "tarih": "2026-09-03",
+          "saat": "12:32",
+          "not": "",
+          "makine": "Netzsch"
         }
-      ]
+      ],
+      "makine": "Netzsch"
     }
   ]
 }
