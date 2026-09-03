@@ -3742,10 +3742,10 @@
       "renk": "",
       "miktar": 400,
       "not": "",
-      "durum": "kalite",
+      "durum": "onay",
       "tarihOlustur": "2026-09-03",
       "tarihGuncelle": "2026-09-03",
-      "ts": 1788428410765,
+      "ts": 1788428414864,
       "gecmis": [
         {
           "durum": "bekleyen",
@@ -3762,6 +3762,13 @@
         },
         {
           "durum": "kalite",
+          "tarih": "2026-09-03",
+          "saat": "12:40",
+          "not": "",
+          "makine": ""
+        },
+        {
+          "durum": "onay",
           "tarih": "2026-09-03",
           "saat": "12:40",
           "not": "",
