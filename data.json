@@ -3073,18 +3073,26 @@
       "renk": "",
       "miktar": 418,
       "not": "",
-      "durum": "bekleyen",
+      "durum": "dynomil",
       "tarihOlustur": "2026-09-03",
       "tarihGuncelle": "2026-09-03",
-      "ts": 1788427302969,
+      "ts": 1788427406955,
       "gecmis": [
         {
           "durum": "bekleyen",
           "tarih": "2026-09-03",
           "saat": "12:21",
           "not": "Listeye eklendi"
+        },
+        {
+          "durum": "dynomil",
+          "tarih": "2026-09-03",
+          "saat": "12:23",
+          "not": "",
+          "makine": "D-11"
         }
-      ]
+      ],
+      "makine": "D-11"
     },
     {
       "id": "1788427342275",
@@ -3122,6 +3130,26 @@
           "durum": "bekleyen",
           "tarih": "2026-09-03",
           "saat": "12:22",
+          "not": "Listeye eklendi"
+        }
+      ]
+    },
+    {
+      "id": "1788427469087",
+      "kod": "854-3950",
+      "parti": "10088821",
+      "renk": "",
+      "miktar": 384,
+      "not": "Paçal bekliyor.",
+      "durum": "bekleyen",
+      "tarihOlustur": "2026-09-03",
+      "tarihGuncelle": "2026-09-03",
+      "ts": 1788427469087,
+      "gecmis": [
+        {
+          "durum": "bekleyen",
+          "tarih": "2026-09-03",
+          "saat": "12:24",
           "not": "Listeye eklendi"
         }
       ]
