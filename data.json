@@ -3490,10 +3490,10 @@
       "renk": "",
       "miktar": 350,
       "not": "",
-      "durum": "dynomil",
+      "durum": "kalite",
       "tarihOlustur": "2026-09-03",
       "tarihGuncelle": "2026-09-03",
-      "ts": 1788427960425,
+      "ts": 1788427965206,
       "gecmis": [
         {
           "durum": "bekleyen",
@@ -3507,6 +3507,13 @@
           "saat": "12:32",
           "not": "",
           "makine": "Netzsch"
+        },
+        {
+          "durum": "kalite",
+          "tarih": "2026-09-03",
+          "saat": "12:32",
+          "not": "",
+          "makine": ""
         }
       ],
       "makine": "Netzsch"
