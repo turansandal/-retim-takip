@@ -3482,6 +3482,26 @@
         }
       ],
       "makine": "D-1"
+    },
+    {
+      "id": "1788427951612",
+      "kod": "854-9100",
+      "parti": "9343313",
+      "renk": "",
+      "miktar": 350,
+      "not": "",
+      "durum": "bekleyen",
+      "tarihOlustur": "2026-09-03",
+      "tarihGuncelle": "2026-09-03",
+      "ts": 1788427951612,
+      "gecmis": [
+        {
+          "durum": "bekleyen",
+          "tarih": "2026-09-03",
+          "saat": "12:32",
+          "not": "Listeye eklendi"
+        }
+      ]
     }
   ]
 }
