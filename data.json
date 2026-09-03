@@ -3573,6 +3573,26 @@
         }
       ],
       "makine": "D-10"
+    },
+    {
+      "id": "1788428054216",
+      "kod": "854-1000",
+      "parti": "10088993",
+      "renk": "",
+      "miktar": 1180,
+      "not": "",
+      "durum": "bekleyen",
+      "tarihOlustur": "2026-09-03",
+      "tarihGuncelle": "2026-09-03",
+      "ts": 1788428054216,
+      "gecmis": [
+        {
+          "durum": "bekleyen",
+          "tarih": "2026-09-03",
+          "saat": "12:34",
+          "not": "Listeye eklendi"
+        }
+      ]
     }
   ]
 }
