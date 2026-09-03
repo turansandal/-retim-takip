@@ -3320,6 +3320,34 @@
           "not": "Listeye eklendi"
         }
       ]
+    },
+    {
+      "id": "1788427717065",
+      "kod": "854-9001",
+      "parti": "10089065",
+      "renk": "",
+      "miktar": 685,
+      "not": "",
+      "durum": "dynomil",
+      "tarihOlustur": "2026-09-03",
+      "tarihGuncelle": "2026-09-03",
+      "ts": 1788427722481,
+      "gecmis": [
+        {
+          "durum": "bekleyen",
+          "tarih": "2026-09-03",
+          "saat": "12:28",
+          "not": "Listeye eklendi"
+        },
+        {
+          "durum": "dynomil",
+          "tarih": "2026-09-03",
+          "saat": "12:28",
+          "not": "",
+          "makine": "Netzsch"
+        }
+      ],
+      "makine": "Netzsch"
     }
   ]
 }
