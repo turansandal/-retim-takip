@@ -3141,10 +3141,10 @@
       "renk": "",
       "miktar": 384,
       "not": "Paçal bekliyor.",
-      "durum": "dynomil",
+      "durum": "kalite",
       "tarihOlustur": "2026-09-03",
       "tarihGuncelle": "2026-09-03",
-      "ts": 1788427523163,
+      "ts": 1788427527711,
       "gecmis": [
         {
           "durum": "bekleyen",
@@ -3158,6 +3158,13 @@
           "saat": "12:25",
           "not": "",
           "makine": "D-11"
+        },
+        {
+          "durum": "kalite",
+          "tarih": "2026-09-03",
+          "saat": "12:25",
+          "not": "",
+          "makine": ""
         }
       ],
       "makine": "D-11"
