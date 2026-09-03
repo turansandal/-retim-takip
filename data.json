@@ -3141,10 +3141,10 @@
       "renk": "",
       "miktar": 384,
       "not": "Paçal bekliyor.",
-      "durum": "uygunsuz",
+      "durum": "paclama",
       "tarihOlustur": "2026-09-03",
       "tarihGuncelle": "2026-09-03",
-      "ts": 1788427535227,
+      "ts": 1788427547073,
       "gecmis": [
         {
           "durum": "bekleyen",
@@ -3178,6 +3178,13 @@
           "tarih": "2026-09-03",
           "saat": "12:25",
           "not": "",
+          "makine": ""
+        },
+        {
+          "durum": "paclama",
+          "tarih": "2026-09-03",
+          "saat": "12:25",
+          "not": "Paçal bekliyor",
           "makine": ""
         }
       ],
