@@ -3105,6 +3105,26 @@
           "not": "Listeye eklendi"
         }
       ]
+    },
+    {
+      "id": "1788427375733",
+      "kod": "854-5100",
+      "parti": "10089061",
+      "renk": "",
+      "miktar": 300,
+      "not": "Makinede 6000 bekliyor",
+      "durum": "bekleyen",
+      "tarihOlustur": "2026-09-03",
+      "tarihGuncelle": "2026-09-03",
+      "ts": 1788427375733,
+      "gecmis": [
+        {
+          "durum": "bekleyen",
+          "tarih": "2026-09-03",
+          "saat": "12:22",
+          "not": "Listeye eklendi"
+        }
+      ]
     }
   ]
 }
