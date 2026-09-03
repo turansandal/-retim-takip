@@ -3777,5 +3777,265 @@
       ],
       "makine": "D-15"
     }
+  ],
+  "dynomill": [
+    {
+      "makine": "D-1",
+      "urunler": [
+        {
+          "kod": "854-3000",
+          "renk": "Yeşil",
+          "boncukKg": 105,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 350
+        },
+        {
+          "kod": "854-3001",
+          "renk": "Lc Yeşil",
+          "boncukKg": 110,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 300
+        },
+        {
+          "kod": "854-5001",
+          "renk": "Lc Kırmızı Vıole",
+          "boncukKg": 110,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 333
+        },
+        {
+          "kod": "854-5100",
+          "renk": "Vıole",
+          "boncukKg": 110,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 400
+        },
+        {
+          "kod": "854-5101",
+          "renk": "Lc Vıole",
+          "boncukKg": 110,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 400
+        },
+        {
+          "kod": "854-6000",
+          "renk": "Koyu Mavi",
+          "boncukKg": 110,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 395
+        },
+        {
+          "kod": "854-6001",
+          "renk": "Lc Mavi",
+          "boncukKg": 110,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 350
+        }
+      ]
+    },
+    {
+      "makine": "D-2",
+      "urunler": [
+        {
+          "kod": "599/594 SERİ SİYAH",
+          "renk": "Profil Boyası",
+          "boncukKg": 100,
+          "boncukEbat": "1.4-1.6 Zirkonyum",
+          "toplamKg": 0
+        }
+      ]
+    },
+    {
+      "makine": "D-8",
+      "urunler": [
+        {
+          "kod": "594-SERİ KIRMIZI",
+          "renk": "Profil Boyası",
+          "boncukKg": 90,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 0
+        }
+      ]
+    },
+    {
+      "makine": "D-9",
+      "urunler": [
+        {
+          "kod": "854-2250",
+          "renk": "Turuncu",
+          "boncukKg": 100,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 0
+        },
+        {
+          "kod": "854-4050",
+          "renk": "Nar Çiçeği",
+          "boncukKg": 100,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 0
+        },
+        {
+          "kod": "854-4100",
+          "renk": "İç Kırmızı",
+          "boncukKg": 100,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 0
+        },
+        {
+          "kod": "854-4150",
+          "renk": "Dış Kırmızı",
+          "boncukKg": 100,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 0
+        },
+        {
+          "kod": "854-5050",
+          "renk": "Pembe",
+          "boncukKg": 100,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 0
+        }
+      ]
+    },
+    {
+      "makine": "D-10",
+      "urunler": [
+        {
+          "kod": "854-1000",
+          "renk": "Beyaz Pasta",
+          "boncukKg": 90,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 1045
+        },
+        {
+          "kod": "854-1002",
+          "renk": "Beyaz Kalsit %60",
+          "boncukKg": 90,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 0
+        }
+      ]
+    },
+    {
+      "makine": "D-11",
+      "urunler": [
+        {
+          "kod": "854-3900",
+          "renk": "Kobalt Yeşil",
+          "boncukKg": 80,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 375
+        },
+        {
+          "kod": "854-3950",
+          "renk": "Promoksit Yeşil",
+          "boncukKg": 80,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 385
+        },
+        {
+          "kod": "854-6600",
+          "renk": "İnorganik Mavi",
+          "boncukKg": 80,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 417
+        },
+        {
+          "kod": "854-6500",
+          "renk": "Kobalt Mavi",
+          "boncukKg": 80,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 409
+        }
+      ]
+    },
+    {
+      "makine": "D-12",
+      "urunler": [
+        {
+          "kod": "594-SERİ KIRMIZI",
+          "renk": "Profil Boyası",
+          "boncukKg": 90,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 1500
+        }
+      ]
+    },
+    {
+      "makine": "D-13",
+      "urunler": [
+        {
+          "kod": "854-4250",
+          "renk": "Oksit Kırmızı",
+          "boncukKg": 90,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 375
+        },
+        {
+          "kod": "854-2900",
+          "renk": "Kahverengi",
+          "boncukKg": 90,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 125
+        },
+        {
+          "kod": "854-4200",
+          "renk": "Oksit Kırmızı",
+          "boncukKg": 90,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 735
+        }
+      ]
+    },
+    {
+      "makine": "D-14",
+      "urunler": [
+        {
+          "kod": "854-2300",
+          "renk": "Oksit Sarı",
+          "boncukKg": 90,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 4900
+        }
+      ]
+    },
+    {
+      "makine": "D-15",
+      "urunler": [
+        {
+          "kod": "854-2100",
+          "renk": "İç Cephe Sarı Pasta",
+          "boncukKg": 90,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 375
+        },
+        {
+          "kod": "854-2150",
+          "renk": "Dış Cephe Sarı",
+          "boncukKg": 90,
+          "boncukEbat": "1.8-2.0",
+          "toplamKg": 400
+        }
+      ]
+    },
+    {
+      "makine": "Netzsch",
+      "urunler": [
+        {
+          "kod": "854-9000",
+          "renk": "Su Bazlı Siyah Pasta",
+          "boncukKg": 77.5,
+          "boncukEbat": "0.9-1.1",
+          "toplamKg": 0
+        },
+        {
+          "kod": "854-9100",
+          "renk": "Su Bazlı Demiroksit Siyah",
+          "boncukKg": 77.5,
+          "boncukEbat": "0.9-1.1",
+          "toplamKg": 0
+        }
+      ]
+    }
   ]
 }
