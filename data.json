@@ -3435,26 +3435,6 @@
       "makine": "D-11"
     },
     {
-      "id": "1788427842968",
-      "kod": "854-3000",
-      "parti": "10084830",
-      "renk": "",
-      "miktar": 500,
-      "not": "",
-      "durum": "bekleyen",
-      "tarihOlustur": "2026-09-03",
-      "tarihGuncelle": "2026-09-03",
-      "ts": 1788427842968,
-      "gecmis": [
-        {
-          "durum": "bekleyen",
-          "tarih": "2026-09-03",
-          "saat": "12:30",
-          "not": "Listeye eklendi"
-        }
-      ]
-    },
-    {
       "id": "1788427845215",
       "kod": "854-3000",
       "parti": "10084830",
