@@ -3258,6 +3258,26 @@
         }
       ],
       "makine": "Netzsch"
+    },
+    {
+      "id": "1788427668271",
+      "kod": "854-4200",
+      "parti": "10087495",
+      "renk": "",
+      "miktar": 735,
+      "not": "",
+      "durum": "bekleyen",
+      "tarihOlustur": "2026-09-03",
+      "tarihGuncelle": "2026-09-03",
+      "ts": 1788427668272,
+      "gecmis": [
+        {
+          "durum": "bekleyen",
+          "tarih": "2026-09-03",
+          "saat": "12:27",
+          "not": "Listeye eklendi"
+        }
+      ]
     }
   ]
 }
