@@ -3608,6 +3608,26 @@
         }
       ],
       "makine": "D-10"
+    },
+    {
+      "id": "1788428093034",
+      "kod": "854-6000",
+      "parti": "10087497",
+      "renk": "",
+      "miktar": 430,
+      "not": "",
+      "durum": "bekleyen",
+      "tarihOlustur": "2026-09-03",
+      "tarihGuncelle": "2026-09-03",
+      "ts": 1788428093034,
+      "gecmis": [
+        {
+          "durum": "bekleyen",
+          "tarih": "2026-09-03",
+          "saat": "12:34",
+          "not": "Listeye eklendi"
+        }
+      ]
     }
   ]
 }
